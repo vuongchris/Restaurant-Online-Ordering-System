@@ -11,9 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^9.9.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "^2.1.3",
-    "web-vitals": "^2.1.4"
+    "react-dom": "^18.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,6 +43,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.30.1",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react-scripts": "^5.0.1"
   }
 }
