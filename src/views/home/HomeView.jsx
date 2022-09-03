@@ -1,7 +1,19 @@
+import { Button } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function HomeView() {
+  // Temporarily place logout button in homepage
+  const { currentUser, logout } = useAuth();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
   return (
     <div
       style={{ textAlign: 'center' }}
@@ -10,6 +22,25 @@ function HomeView() {
       <Link to="login">LOGIN</Link>
       <br />
       <Link to="register">REGISTER</Link>
+      <br />
+
+      {/** Display a logout button if a user is signed in */}
+      {currentUser && (
+        <div>
+          <h3>
+            Welcome,
+            {' '}
+            {currentUser.email}
+          </h3>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
