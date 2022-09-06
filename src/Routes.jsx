@@ -7,6 +7,7 @@ import AuthController from './controllers/auth/AuthController';
 import HomeController from './controllers/home/HomeController';
 import CheckoutController from './controllers/checkout/CheckoutController';
 import CartController from './controllers/cart/CartController';
+import SpecialRequest from './views/special_request/SpecialRequest';
 
 function Routes() {
   return (
@@ -18,7 +19,8 @@ function Routes() {
           <Route path="/login" element={<AuthController view="login" />} />
           <Route path="/register" element={<AuthController view="register" />} />
           <Route path="/checkout" element={<CheckoutController />} />
-          <Route path="cart" element={<CartController />} />
+          <Route path="/cart" element={<CartController />} />
+          <Route path="/specialRequest" element={<SpecialRequest />} />
         </AppRoutes>
       </AuthProvider>
     </Router>
