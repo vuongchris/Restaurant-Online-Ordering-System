@@ -27,7 +27,9 @@ function HomeView() {
       <Link to="payment">PAYMENT</Link>
       <br />
       <Link to="specialrequest">SPECIAL REQUEST</Link>
-
+      <br />
+      <Link to="restaurantList">Restaurant List</Link>
+      
       {/** Display a logout button if a user is signed in */}
       {currentUser && (
         <div>
