@@ -1,7 +1,6 @@
 /* eslint-disable linebreak-style */
 import { Button } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
 function PaymentView() {
@@ -31,7 +30,6 @@ function PaymentView() {
         CVC:
         <input type="text" name="CVC" required />
       </form>
-
 
       {/** Display a logout button if a user is signed in */}
       {currentUser && (

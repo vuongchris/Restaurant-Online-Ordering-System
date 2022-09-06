@@ -1,5 +1,5 @@
 import React from 'react';
-import InfoDisplayView from '../../views/infoDisplay/InfoDisplayView.jsx';
+import InfoDisplayView from '../../views/infoDisplay/InfoDisplayView';
 
 function InfoDisplayController() {
   return <InfoDisplayView />;
