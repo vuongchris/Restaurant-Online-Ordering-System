@@ -19,8 +19,8 @@ function Routes() {
           <Route index element={<HomeController />} />
           <Route path="/login" element={<AuthController view="login" />} />
           <Route path="/register" element={<AuthController view="register" />} />
-          <Route path="/payment" element={<PaymentController view="payment"/>} />
           <Route path="/checkout" element={<CheckoutController />} />
+          <Route path="/payment" element={<PaymentController view="payment"/>} />
           <Route path="/cart" element={<CartController />} />
           <Route path="/specialRequest" element={<SpecialRequest />} />
         </AppRoutes>
