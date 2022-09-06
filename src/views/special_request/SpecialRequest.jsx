@@ -1,8 +1,28 @@
+/* eslint-disable react/prop-types */
+// eslint-disable-next-line no-unused-vars
+import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
 
-function SpecialRequest() {
+function SpecialRequest({
+  specialReqRef,
+}) {
   return (
-    <div>testing</div>
+    <div
+      style={{ textAlign: 'center' }}
+    >
+      <h1>Please add your special request here</h1>
+      <div>
+        <TextField
+          style={{ width: '20%', fontSize: '20px' }}
+          label="Special Request"
+          required
+          multiline
+          rows={5}
+          maxRows={10}
+          inputRef={specialReqRef}
+        />
+      </div>
+    </div>
 
   );
 }

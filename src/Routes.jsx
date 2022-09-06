@@ -9,6 +9,7 @@ import PaymentController from './controllers/payment/PaymentController';
 import CheckoutController from './controllers/checkout/CheckoutController';
 import CartController from './controllers/cart/CartController';
 import SpecialRequest from './views/special_request/SpecialRequest';
+import ChatBot from './views/chat_bot/ChatBot';
 
 function Routes() {
   return (
@@ -20,9 +21,10 @@ function Routes() {
           <Route path="/login" element={<AuthController view="login" />} />
           <Route path="/register" element={<AuthController view="register" />} />
           <Route path="/checkout" element={<CheckoutController />} />
-          <Route path="/payment" element={<PaymentController view="payment"/>} />
+          <Route path="/payment" element={<PaymentController view="payment" />} />
           <Route path="/cart" element={<CartController />} />
-          <Route path="/specialRequest" element={<SpecialRequest />} />
+          <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
+          <Route path="/chatBot" element={<ChatBot />} />
         </AppRoutes>
       </AuthProvider>
     </Router>
