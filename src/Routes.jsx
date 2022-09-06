@@ -9,7 +9,8 @@ import PaymentController from './controllers/payment/PaymentController';
 import CheckoutController from './controllers/checkout/CheckoutController';
 import CartController from './controllers/cart/CartController';
 import SpecialRequest from './views/special_request/SpecialRequest';
-import ChatBot from './views/chat_bot/ChatBot';
+import InfoDisplayController from './controllers/infoDisplay/InfoDisplayController'
+//import ChatBot from './views/chat_bot/ChatBot';
 
 function Routes() {
   return (
@@ -24,7 +25,7 @@ function Routes() {
           <Route path="/payment" element={<PaymentController view="payment" />} />
           <Route path="/cart" element={<CartController />} />
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
-          <Route path="/chatBot" element={<ChatBot />} />
+          <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList"/>} />
         </AppRoutes>
       </AuthProvider>
     </Router>
