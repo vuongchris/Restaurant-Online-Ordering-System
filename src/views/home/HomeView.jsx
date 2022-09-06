@@ -11,10 +11,10 @@ function HomeView() {
     try {
       await logout();
     } catch (ex) {
+      // eslint-disable-next-line no-console
       console.log(ex);
     }
   };
-
   return (
     <div
       style={{ textAlign: 'center' }}
@@ -43,6 +43,10 @@ function HomeView() {
           </Button>
         </div>
       )}
+      <div>
+        <br />
+        <Link to="/cart">Cart</Link>
+      </div>
     </div>
   );
 }
