@@ -24,12 +24,14 @@ function HomeView() {
       <br />
       <Link to="register">REGISTER</Link>
       <br />
+      <Link to="/cart">CART</Link>
+      <br />
       <Link to="payment">PAYMENT</Link>
       <br />
       <Link to="specialrequest">SPECIAL REQUEST</Link>
       <br />
-      <Link to="restaurantList">Restaurant List</Link>
-      
+      <Link to="restaurantList">RESTAURANT LIST</Link>
+
       {/** Display a logout button if a user is signed in */}
       {currentUser && (
         <div>
@@ -47,10 +49,6 @@ function HomeView() {
           </Button>
         </div>
       )}
-      <div>
-        <br />
-        <Link to="/cart">Cart</Link>
-      </div>
     </div>
   );
 }
