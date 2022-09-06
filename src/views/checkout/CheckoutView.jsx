@@ -5,6 +5,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Button, ButtonGroup, Grid } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 function CheckoutView() {
   return (
@@ -26,6 +27,9 @@ function CheckoutView() {
             <Button variant="outline" startIcon={<AccessTimeIcon />} endIcon={<ArrowForwardIosIcon />}>Delivery Time</Button>
             <Button variant="outline" startIcon={<PhoneIcon />} endIcon={<ArrowForwardIosIcon />}>Phone Number</Button>
           </ButtonGroup>
+        </Grid>
+        <Grid>
+          <Link to="/">Submit</Link>
         </Grid>
       </Grid>
     </div>
