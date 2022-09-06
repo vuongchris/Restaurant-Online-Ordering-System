@@ -12,6 +12,7 @@ function ChatBot({
     <div
       style={{ textAlign: 'center' }}
     >
+      {/* might change to some other user story, too hard to implement */}
       <h1>Welcome to the chat bot</h1>
       <div>
         Testing
