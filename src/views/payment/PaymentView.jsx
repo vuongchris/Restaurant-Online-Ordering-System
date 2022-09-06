@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
-function HomeView() {
+function PaymentView() {
   // Temporarily place logout button in homepage
   const { currentUser, logout } = useAuth();
   const handleLogout = async () => {
@@ -20,11 +20,18 @@ function HomeView() {
       style={{ textAlign: 'center' }}
     >
       <h1>Welcome to 41026 - Advanced Software Development!</h1>
-      <Link to="login">LOGIN</Link>
       <br />
-      <Link to="register">REGISTER</Link>
-      <br />
-      <Link to="payment">PAYMENT</Link>
+      <form action="/OrderConfirmed" method="POST">
+        Card Number:
+        <input type="text" name="cardNumber" required />
+        Name:
+        <input type="text" name="name" required />
+        Expiry Date:
+        <input type="date" name="expiryDate" required />
+        CVC:
+        <input type="text" name="CVC" required />
+      </form>
+
 
       {/** Display a logout button if a user is signed in */}
       {currentUser && (
@@ -47,4 +54,4 @@ function HomeView() {
   );
 }
 
-export default HomeView;
+export default PaymentView;
