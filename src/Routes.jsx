@@ -5,6 +5,7 @@ import {
 import { AuthProvider } from './contexts/auth/AuthContext';
 import AuthController from './controllers/auth/AuthController';
 import HomeController from './controllers/home/HomeController';
+import CheckoutController from './controllers/checkout/CheckoutController';
 
 function Routes() {
   return (
@@ -15,6 +16,7 @@ function Routes() {
           <Route index element={<HomeController />} />
           <Route path="/login" element={<AuthController view="login" />} />
           <Route path="/register" element={<AuthController view="register" />} />
+          <Route path="/checkout" element={<CheckoutController />} />
         </AppRoutes>
       </AuthProvider>
     </Router>

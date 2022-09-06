@@ -18,6 +18,7 @@ function AuthController({ view }) {
     e.preventDefault();
 
     if (passwordRef.current.value.trim().length < 6) {
+      // eslint-disable-next-line no-alert
       alert('Password length must be at least 6 characters.');
       return;
     }
@@ -26,6 +27,7 @@ function AuthController({ view }) {
       await register(emailRef.current.value, passwordRef.current.value);
       navigate('/');
     } catch (ex) {
+      // eslint-disable-next-line no-console
       console.log(ex);
       setLoading(false);
     }
@@ -38,6 +40,7 @@ function AuthController({ view }) {
       await login(emailRef.current.value, passwordRef.current.value);
       navigate('/');
     } catch (ex) {
+      // eslint-disable-next-line no-console
       console.log(ex);
       setLoading(false);
     }
