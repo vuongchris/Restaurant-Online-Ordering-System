@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DoorFrontIcon from '@mui/icons-material/DoorFront';

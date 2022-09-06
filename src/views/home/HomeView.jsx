@@ -43,7 +43,7 @@ function HomeView() {
       )}
       <div>
         <br />
-        <Link to="/checkout">Checkout</Link>
+        <Link to="/cart">Cart</Link>
       </div>
     </div>
   );
