@@ -4,7 +4,7 @@ import './table.css';
 function InfoDisplayView() {
   return (
     <div>
-      {/* This table represent the list*/}
+      {/* This table represent the list */}
       <table>
         <tr>
           <th>Restaurant Name</th>
