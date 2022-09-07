@@ -10,7 +10,7 @@ import CheckoutController from './controllers/checkout/CheckoutController';
 import CartController from './controllers/cart/CartController';
 import SpecialRequest from './views/special_request/SpecialRequest';
 import InfoDisplayController from './controllers/infoDisplay/InfoDisplayController';
-// import ChatBot from './views/chat_bot/ChatBot';
+import CustomerService from './views/customer_service/CustomerService';
 
 function Routes() {
   return (
@@ -26,6 +26,7 @@ function Routes() {
           <Route path="/cart" element={<CartController />} />
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList" />} />
+          <Route path="/customerService" element={<CustomerService />} />
         </AppRoutes>
       </AuthProvider>
     </Router>
