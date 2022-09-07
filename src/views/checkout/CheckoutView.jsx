@@ -29,7 +29,7 @@ function CheckoutView() {
           </ButtonGroup>
         </Grid>
         <Grid>
-          <Link to="/">Submit</Link>
+          <Link to="/">SUBMIT</Link>
         </Grid>
       </Grid>
     </div>

@@ -23,7 +23,7 @@ function CartView() {
           <p>Total: 0.00</p>
         </Grid>
         <Grid item>
-          <Link to="/checkout">Checkout</Link>
+          <Link to="/checkout">CHECKOUT</Link>
         </Grid>
       </Grid>
     </div>

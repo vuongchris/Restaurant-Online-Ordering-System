@@ -1,4 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Grid } from '@mui/material';
+import { render } from '@testing-library/react';
 import './table.css';
 
 function InfoDisplayView() {
