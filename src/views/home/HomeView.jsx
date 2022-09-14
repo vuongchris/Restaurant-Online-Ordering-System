@@ -28,9 +28,11 @@ function HomeView() {
       <br />
       <Link to="payment">PAYMENT</Link>
       <br />
-      <Link to="specialrequest">SPECIAL REQUEST</Link>
+      <Link to="specialRequest">SPECIAL REQUEST</Link>
       <br />
       <Link to="restaurantList">Restaurant List</Link>
+      <br />
+      <Link to="customerService">CUSTOMER SERVICE</Link>
 
       {/** Display a logout button if a user is signed in */}
       {currentUser && (

@@ -17,6 +17,17 @@ function CustomerService({
       <div>
         Please state what assistant do you need and our agent will get back to you shortly.
       </div>
+      <div>
+        <TextField
+          style={{ width: '20%', fontSize: '20px', margin: '20px' }}
+          label="Customer Serivce"
+          required
+          multiline
+          rows={5}
+          maxRows={10}
+          inputRef={customerServiceRef}
+        />
+      </div>
     </div>
 
   );
