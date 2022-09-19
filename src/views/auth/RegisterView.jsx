@@ -29,6 +29,7 @@ function RegisterView({
           <TextField
             label="Password"
             required
+            type="password"
             inputRef={passwordRef}
           />
         </Grid>

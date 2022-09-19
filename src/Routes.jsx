@@ -1,22 +1,24 @@
 import React from 'react';
 import {
-  BrowserRouter as Router, Link, Route, Routes as AppRoutes,
+  BrowserRouter as Router, Route, Routes as AppRoutes,
 } from 'react-router-dom';
 import { AuthProvider } from './contexts/auth/AuthContext';
+import AccountController from './controllers/account/AccountController';
 import AuthController from './controllers/auth/AuthController';
-import HomeController from './controllers/home/HomeController';
-import PaymentController from './controllers/payment/PaymentController';
-import CheckoutController from './controllers/checkout/CheckoutController';
 import CartController from './controllers/cart/CartController';
-import SpecialRequest from './views/special_request/SpecialRequest';
+import CheckoutController from './controllers/checkout/CheckoutController';
+import HomeController from './controllers/home/HomeController';
 import InfoDisplayController from './controllers/infoDisplay/InfoDisplayController';
+import PaymentController from './controllers/payment/PaymentController';
 import CustomerService from './views/customer_service/CustomerService';
+import Navbar from './views/navbar/Navbar';
+import SpecialRequest from './views/special_request/SpecialRequest';
 
 function Routes() {
   return (
     <Router>
       <AuthProvider>
-        <Link to="/">HOME</Link>
+        <Navbar />
         <AppRoutes>
           <Route index element={<HomeController />} />
           <Route path="/login" element={<AuthController view="login" />} />
@@ -27,6 +29,7 @@ function Routes() {
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList" />} />
           <Route path="/customerService" element={<CustomerService />} />
+          <Route path="/account" element={<AccountController />} />
         </AppRoutes>
       </AuthProvider>
     </Router>
