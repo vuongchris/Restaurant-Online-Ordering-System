@@ -90,7 +90,7 @@ export default function PrimarySearchAppBar() {
 
   // This menu should be displayed when an anonymous user clicks on the "Profile" icon
   const anonymousMenu = (
-    <>
+    <div>
       <MenuItem onClick={handleMenuClose}>
         <Link to="/register" style={{ textDecoration: 'none', color: 'inherit' }}>
           Register
@@ -101,19 +101,19 @@ export default function PrimarySearchAppBar() {
           Login
         </Link>
       </MenuItem>
-    </>
+    </div>
   );
 
   // This menu should be displayed when an authenticated user clicks on the "Profile" icon
   const authenticatedMenu = (
-    <>
+    <div>
       <MenuItem onClick={handleMenuClose}>
         <Link to="/account" style={{ textDecoration: 'none', color: 'inherit' }}>
           My Account
         </Link>
       </MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
-    </>
+    </div>
   );
 
   const menuId = 'primary-search-account-menu';
