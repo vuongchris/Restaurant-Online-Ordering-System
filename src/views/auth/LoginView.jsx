@@ -29,6 +29,7 @@ function LoginView({
           <TextField
             label="Password"
             required
+            type="password"
             inputRef={passwordRef}
           />
         </Grid>
