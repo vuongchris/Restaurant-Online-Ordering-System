@@ -25,7 +25,7 @@ function createData(item, quantity, total) {
 
 const rows = [
   createData('Chicken Burger', 2, 5.00),
-  createData('Hamburger', 1, 2.50),
+  createData('Hamburger', 3, 7.50),
   createData('Chocolate Sundae', 1, 3.00),
   createData('Large Coke', 1, 4.00),
 ];
@@ -139,6 +139,21 @@ function CartView() {
                   orderBy={orderBy}
                   onRequestSort={handleRequestSort}
                 />
+                <TableBody>
+                  {rows.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
+                    <TableRow>
+                      <TableCell>
+                        {row.item}
+                      </TableCell>
+                      <TableCell>
+                        {row.quantity}
+                      </TableCell>
+                      <TableCell>
+                        {row.total}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </TableContainer>
           </Paper>
