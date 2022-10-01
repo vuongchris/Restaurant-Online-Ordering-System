@@ -144,9 +144,11 @@ function ReviewHistoryView() {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Review History</Typography>
+          <Typography variant="h3">Review</Typography>
         </Grid>
-
+        <Grid item>
+          <Link to="/createReview">Create Review</Link>
+        </Grid>
         <Grid item>
           <Paper>
             <TableContainer>

@@ -1,6 +1,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -16,6 +17,8 @@ function ReviewView() {
 
   const reviewCollectionRef = collection(db, 'review');
 
+  const navigate = useNavigate();
+
   const handleReviewSubmit = async () => {
     try {
       await addDoc(reviewCollectionRef, {
@@ -23,6 +26,7 @@ function ReviewView() {
         rating: newRating,
         description: newDescription,
       });
+      navigate('/reviews');
       console.log('Document created!');
     } catch (e) {
       console.error('Error adding document: ', e);
@@ -39,7 +43,7 @@ function ReviewView() {
         spacing={2}
       >
         <Grid item>
-          <Typography variant="h3">Review</Typography>
+          <Typography variant="h3">Create Review</Typography>
         </Grid>
         <Grid item>
           <TextField

@@ -1,6 +1,6 @@
 import React from 'react';
-import ReviewView from '../../views/review/ReviewView';
-import ReviewHistoryView from '../../views/review/ReviewHistoryView';
+import ReviewView from '../../views/review/CreateReviewView';
+import ReviewHistoryView from '../../views/review/ReviewsView';
 
 function ReviewController({ view }) {
   const reviewViews = {
