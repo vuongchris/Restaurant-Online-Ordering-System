@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 
-function ReviewView({ descriptionRef, ratingRef, handleReviewSubmit }) {
+function ReviewView({ descriptionRef, handleReviewSubmit }) {
   const [value, setValue] = React.useState(2);
   return (
     <div>
@@ -23,13 +23,11 @@ function ReviewView({ descriptionRef, ratingRef, handleReviewSubmit }) {
           </Grid>
           <Grid item>
             <Rating
-              defaultValue={null}
               value={value}
               precision={0.5}
               onChange={(event, newValue) => {
                 setValue(newValue);
               }}
-              inputRef={ratingRef}
             />
             <TextField
               style={{ width: '100%', fontSize: '20px' }}

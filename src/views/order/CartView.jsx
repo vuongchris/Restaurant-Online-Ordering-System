@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -14,21 +15,10 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { visuallyHidden } from '@mui/utils';
-
-function createData(item, quantity, total) {
-  return {
-    item,
-    quantity,
-    total,
-  };
-}
-
-const rows = [
-  createData('Chicken Burger', 2, 5.00),
-  createData('Hamburger', 3, 7.50),
-  createData('Chocolate Sundae', 1, 3.00),
-  createData('Large Coke', 1, 4.00),
-];
+import {
+  collection, query, where, getDocs,
+} from 'firebase/firestore';
+import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -111,7 +101,8 @@ EnhancedTableHead.propTypes = {
 function CartView() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('total');
-
+  const q = query(collection(db, 'order'), where('user', '==', 'id'));
+  const querySnapshot = async (e) => { await getDocs(q); };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');

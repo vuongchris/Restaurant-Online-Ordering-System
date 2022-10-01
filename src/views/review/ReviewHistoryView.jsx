@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -14,15 +14,10 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { visuallyHidden } from '@mui/utils';
-
-function createData(order, date, stars, total) {
-  return {
-    order,
-    date,
-    stars,
-    total,
-  };
-}
+import {
+  collection, addDoc, getDocs, query,
+} from 'firebase/firestore';
+import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -42,10 +37,10 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
-    id: 'order',
+    id: 'item',
     numeric: false,
     disablePadding: false,
-    label: 'Order',
+    label: 'Item',
   },
   {
     id: 'date',
@@ -54,16 +49,10 @@ const headCells = [
     label: 'Date',
   },
   {
-    id: 'stars',
+    id: 'rating',
     numeric: false,
     disablePadding: false,
-    label: 'Stars',
-  },
-  {
-    id: 'total',
-    numeric: true,
-    disablePadding: false,
-    label: 'Total',
+    label: 'Rating',
   },
 ];
 
@@ -109,8 +98,19 @@ EnhancedTableHead.propTypes = {
 };
 
 function ReviewHistoryView() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('total');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('total');
+
+  const reviewCollectionRef = collection(db, 'review');
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const getReviews = async () => {
+      const data = await getDocs(reviewCollectionRef);
+      setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getReviews();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -139,6 +139,21 @@ function ReviewHistoryView() {
                   orderBy={orderBy}
                   onRequestSort={handleRequestSort}
                 />
+                <TableBody>
+                  {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
+                    <TableRow>
+                      <TableCell>
+                        {row.item}
+                      </TableCell>
+                      <TableCell>
+                        {row.date}
+                      </TableCell>
+                      <TableCell>
+                        {row.rating}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </TableContainer>
           </Paper>

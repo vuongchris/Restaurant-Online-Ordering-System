@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -15,22 +16,10 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { visuallyHidden } from '@mui/utils';
 import { RowingSharp } from '@mui/icons-material';
-
-function createData(order, date, status, total) {
-  return {
-    order,
-    date,
-    status,
-    total,
-  };
-}
-
-const rows = [
-  createData(1, '15/08/2022', 'Delivered', 20.00),
-  createData(2, '20/08/2022', 'Delivered', 15.00),
-  createData(3, '04/09/2022', 'Delivered', 30.00),
-  createData(4, '22/09/2022', 'Pending', 25.00),
-];
+import {
+  collection, query, where, getDocs,
+} from 'firebase/firestore';
+import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -120,6 +109,17 @@ function OrderHistoryView() {
   const [order, setOrder] = React.useState('desc');
   const [orderBy, setOrderBy] = React.useState('order');
 
+  const orderCollectionRef = collection(db, 'order');
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const getOrders = async () => {
+      const data = await getDocs(orderCollectionRef);
+      setOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getOrders();
+  }, []);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -148,7 +148,7 @@ function OrderHistoryView() {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {rows.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
+                  {orders.slice().sort(getComparator(order, orderBy)).map((row) => (
                     <TableRow>
                       <TableCell>
                         {row.order}
