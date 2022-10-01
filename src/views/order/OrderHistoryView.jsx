@@ -106,8 +106,8 @@ EnhancedTableHead.propTypes = {
 };
 
 function OrderHistoryView() {
-  const [order, setOrder] = React.useState('desc');
-  const [orderBy, setOrderBy] = React.useState('order');
+  const [order, setOrder] = useState('desc');
+  const [orderBy, setOrderBy] = useState('order');
 
   const orderCollectionRef = collection(db, 'order');
   const [orders, setOrders] = useState([]);

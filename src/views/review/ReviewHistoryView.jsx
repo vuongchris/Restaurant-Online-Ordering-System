@@ -1,3 +1,5 @@
+/* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -13,10 +15,13 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import {
-  collection, addDoc, getDocs, query,
+  collection, addDoc, getDocs, query, doc, deleteDoc,
 } from 'firebase/firestore';
+import { deleteUser } from 'firebase/auth';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -43,16 +48,16 @@ const headCells = [
     label: 'Item',
   },
   {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
     id: 'rating',
     numeric: false,
     disablePadding: false,
     label: 'Rating',
+  },
+  {
+    id: 'description',
+    numeric: false,
+    disablePadding: false,
+    label: 'Description',
   },
 ];
 
@@ -112,11 +117,23 @@ function ReviewHistoryView() {
     getReviews();
   }, []);
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
+  const deleteReview = async (id) => {
+    try {
+      const reviewDoc = doc(db, 'review', id);
+      await deleteDoc(reviewDoc);
+      console.log('Document deleted!');
+    } catch (e) {
+      console.error('Error deleting document: ', e);
+    }
+    window.location.reload();
+  };
+
   return (
     <div>
       <Grid
@@ -146,10 +163,13 @@ function ReviewHistoryView() {
                         {row.item}
                       </TableCell>
                       <TableCell>
-                        {row.date}
+                        {row.rating}
                       </TableCell>
                       <TableCell>
-                        {row.rating}
+                        {row.description}
+                      </TableCell>
+                      <TableCell>
+                        <Button onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
