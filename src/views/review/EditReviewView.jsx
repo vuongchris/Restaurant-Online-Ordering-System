@@ -13,13 +13,13 @@ import { useLocation } from 'react-router-dom';
 import { db } from '../../firebase';
 
 function EditReviewView() {
-  const [newRating, setRating] = useState(0);
-  const [newDescription, setDescription] = useState('');
-  const [newItem, setItem] = useState('');
-
   const location = useLocation();
+  const [newRating, setRating] = useState(location.state.rating);
+  const [newDescription, setDescription] = useState(location.state.description);
+  const [newItem, setItem] = useState(location.state.item);
 
   const navigate = useNavigate();
+
   const handleReviewSubmit = async () => {
     try {
       const docRef = doc(db, 'review', location.state.id);
@@ -33,6 +33,10 @@ function EditReviewView() {
     } catch (e) {
       console.error('Error adding document: ', e);
     }
+  };
+
+  const toReviews = async () => {
+    navigate('/reviews');
   };
 
   return (
@@ -85,6 +89,17 @@ function EditReviewView() {
             onClick={handleReviewSubmit}
           >
             Submit
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={toReviews}
+          >
+            Cancel
+
           </Button>
         </Grid>
       </Grid>

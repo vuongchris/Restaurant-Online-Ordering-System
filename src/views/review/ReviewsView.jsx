@@ -19,6 +19,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TablePagination from '@mui/material/TablePagination';
 import { visuallyHidden } from '@mui/utils';
 import {
   collection, addDoc, getDocs, query, doc, deleteDoc,
@@ -59,6 +60,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Description',
+  },
+  {
+    id: 'options',
+    numeric: false,
+    disablePadding: false,
+    label: 'Options',
   },
 ];
 
@@ -106,11 +113,17 @@ EnhancedTableHead.propTypes = {
 function ReviewsView() {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const reviewCollectionRef = collection(db, 'review');
   const [reviews, setReviews] = useState([]);
 
   const navigate = useNavigate();
+
+  const toCreateReview = async () => {
+    navigate('/createReview');
+  };
 
   useEffect(() => {
     const getReviews = async () => {
@@ -124,6 +137,15 @@ function ReviewsView() {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const openReview = async (reviewId, reviewItem, reviewRating, reviewDescription) => {
@@ -155,10 +177,10 @@ function ReviewsView() {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Review</Typography>
+          <Typography variant="h3">Reviews</Typography>
         </Grid>
         <Grid item>
-          <Link to="/createReview">Create Review</Link>
+          <Button variant="contained" onClick={toCreateReview}>Create Review</Button>
         </Grid>
         <Grid item>
           <Paper>
@@ -188,13 +210,22 @@ function ReviewsView() {
                         >
                           Edit
                         </Button>
-                        <Button onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
+                        <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={reviews.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Paper>
         </Grid>
       </Grid>

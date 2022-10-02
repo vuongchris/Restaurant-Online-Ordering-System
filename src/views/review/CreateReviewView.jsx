@@ -33,6 +33,10 @@ function CreateReviewView() {
     }
   };
 
+  const toReviews = async () => {
+    navigate('/reviews');
+  };
+
   return (
     <div>
       <Grid
@@ -80,6 +84,17 @@ function CreateReviewView() {
             onClick={handleReviewSubmit}
           >
             Submit
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={toReviews}
+          >
+            Cancel
+
           </Button>
         </Grid>
       </Grid>
