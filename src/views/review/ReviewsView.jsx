@@ -2,7 +2,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {
+  createSearchParams, Link, Navigate, useNavigate,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -21,7 +23,6 @@ import { visuallyHidden } from '@mui/utils';
 import {
   collection, addDoc, getDocs, query, doc, deleteDoc,
 } from 'firebase/firestore';
-import { deleteUser } from 'firebase/auth';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -102,12 +103,14 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function ReviewHistoryView() {
+function ReviewsView() {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
 
   const reviewCollectionRef = collection(db, 'review');
   const [reviews, setReviews] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getReviews = async () => {
@@ -121,6 +124,14 @@ function ReviewHistoryView() {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+  };
+
+  const openReview = async (reviewId, reviewItem, reviewRating, reviewDescription) => {
+    navigate('/editReview', {
+      state: {
+        id: reviewId, item: reviewItem, rating: reviewRating, description: reviewDescription,
+      },
+    });
   };
 
   const deleteReview = async (id) => {
@@ -171,6 +182,12 @@ function ReviewHistoryView() {
                         {row.description}
                       </TableCell>
                       <TableCell>
+                        <Button onClick={() => {
+                          openReview(row.id, row.item, row.rating, row.description);
+                        }}
+                        >
+                          Edit
+                        </Button>
                         <Button onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
                       </TableCell>
                     </TableRow>
@@ -185,4 +202,4 @@ function ReviewHistoryView() {
   );
 }
 
-export default ReviewHistoryView;
+export default ReviewsView;

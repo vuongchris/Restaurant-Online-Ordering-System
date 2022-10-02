@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
@@ -7,21 +8,22 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import { addDoc, collection } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore';
+import { useLocation } from 'react-router-dom';
 import { db } from '../../firebase';
 
-function CreateReviewView() {
+function EditReviewView() {
   const [newRating, setRating] = useState(0);
   const [newDescription, setDescription] = useState('');
   const [newItem, setItem] = useState('');
 
-  const reviewCollectionRef = collection(db, 'review');
+  const location = useLocation();
 
   const navigate = useNavigate();
-
   const handleReviewSubmit = async () => {
     try {
-      await addDoc(reviewCollectionRef, {
+      const docRef = doc(db, 'review', location.state.id);
+      await updateDoc(docRef, {
         item: newItem,
         rating: newRating,
         description: newDescription,
@@ -43,12 +45,13 @@ function CreateReviewView() {
         spacing={2}
       >
         <Grid item>
-          <Typography variant="h3">Create Review</Typography>
+          <Typography variant="h3">Edit Review</Typography>
         </Grid>
         <Grid item>
           <TextField
             label="Item"
             required
+            defaultValue={location.state.item}
             onChange={(event) => {
               setItem(event.target.value);
             }}
@@ -56,6 +59,7 @@ function CreateReviewView() {
         </Grid>
         <Grid item>
           <Rating
+            defaultValue={location.state.rating}
             precision={0.5}
             onChange={(event) => {
               setRating(event.target.value);
@@ -64,6 +68,7 @@ function CreateReviewView() {
           <TextField
             style={{ width: '100%', fontSize: '20px' }}
             label="Review Description"
+            defaultValue={location.state.description}
             required
             multiline
             rows={5}
@@ -87,4 +92,4 @@ function CreateReviewView() {
   );
 }
 
-export default CreateReviewView;
+export default EditReviewView;
