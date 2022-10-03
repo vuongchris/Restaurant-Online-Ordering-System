@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { getMenuOrderByCategory } from '../../services/menu/MenuService';
+import { useAuth } from '../../contexts/auth/AuthContext';
+import { getSavedPaymentDetails } from '../../services/account/AccountService';
 import AccountView from '../../views/account/AccountView';
 
 function AccountController() {
-  // Temporarily here just to test firebase data retrieval
-  const [menu, setMenu] = useState([]);
+  const { currentUser } = useAuth();
+  const [paymentMethods, setPaymentMethods] = useState([]);
   useEffect(() => {
-    const setState = async () => setMenu(await getMenuOrderByCategory());
+    const setState = async () => setPaymentMethods(await getSavedPaymentDetails(currentUser.uid));
     setState();
   }, []);
-  return <AccountView menu={menu} />;
+  return <AccountView payments={paymentMethods} />;
 }
 
 export default AccountController;

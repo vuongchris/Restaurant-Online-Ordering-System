@@ -1,29 +1,27 @@
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useEffect, useState } from 'react';
-import {
-  createSearchParams, Link, Navigate, useNavigate,
-} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import TablePagination from '@mui/material/TablePagination';
 import { visuallyHidden } from '@mui/utils';
 import {
-  collection, addDoc, getDocs, query, doc, deleteDoc,
+  collection, deleteDoc, doc, getDocs,
 } from 'firebase/firestore';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -193,7 +191,7 @@ function ReviewsView() {
                 />
                 <TableBody>
                   {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow>
+                    <TableRow key={row.item}>
                       <TableCell>
                         {row.item}
                       </TableCell>

@@ -7,7 +7,7 @@ jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
 }));
 
-describe('Home View tests', () => {
+describe('Home View Test Cases', () => {
   it('When a user is logged in, they should be welcome by their email, and a logout button should be shown', () => {
     // Arrange
     const contextValues = { currentUser: { email: 'Test@email.com' } };

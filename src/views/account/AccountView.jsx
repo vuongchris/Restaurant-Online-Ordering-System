@@ -2,7 +2,7 @@
 import React from 'react';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
-function AccountView({ menu }) {
+function AccountView({ payments }) {
   const { currentUser } = useAuth();
 
   return (
@@ -20,11 +20,30 @@ function AccountView({ menu }) {
       </h3>
       )}
       <h1>Saved Payment Details</h1>
+      {payments.map((card, index) => (
+        <div key={card.cardNumber}>
+          <h2>
+            Payment method #
+            {index + 1}
+          </h2>
+          <h4>
+            Card Number:
+            {' '}
+            {card.cardNumber}
+          </h4>
+          <h4>
+            Expiry:
+            {' '}
+            {card.expiry}
+          </h4>
+          <h4>
+            CVV:
+            {' '}
+            {card.cvv}
+          </h4>
+        </div>
+      ))}
       <h1>Order History</h1>
-      {
-        // Line below placed temporarily
-        JSON.stringify(menu)
-      }
     </div>
   );
 }
