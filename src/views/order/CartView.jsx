@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -101,8 +101,17 @@ EnhancedTableHead.propTypes = {
 function CartView() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('total');
-  const q = query(collection(db, 'order'), where('user', '==', 'id'));
-  const querySnapshot = async (e) => { await getDocs(q); };
+
+  const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items');
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const getItems = async () => {
+      const data = await getDocs(reviewCollectionRef);
+      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+  }, []);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -131,7 +140,7 @@ function CartView() {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {rows.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
+                  {items.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
                     <TableRow>
                       <TableCell>
                         {row.item}
