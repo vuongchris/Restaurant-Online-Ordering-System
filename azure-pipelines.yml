@@ -26,3 +26,7 @@ steps:
 
 - script: npm test
   displayName: 'npm test'
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
