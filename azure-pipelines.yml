@@ -24,7 +24,7 @@ steps:
 - script: npm run build
   displayName: 'npm run build'
 
-- script: npm test
+- script: set CI=true && npm test
   displayName: 'npm test'
 - task: PublishTestResults@2
   inputs:
