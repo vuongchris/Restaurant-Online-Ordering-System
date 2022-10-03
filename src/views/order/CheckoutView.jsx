@@ -161,6 +161,7 @@ function CheckoutView() {
               <TextField style={{ width: '50%', fontSize: '20px' }} label="State" />
               <TextField style={{ width: '50%', fontSize: '20px' }} label="Country" />
               <TextField style={{ width: '50%', fontSize: '20px' }} label="Postcode" />
+              <TextField style={{ width: '50%', fontSize: '20px' }} label="Phone Number" />
             </Grid>
           </Grid>
           <br />
