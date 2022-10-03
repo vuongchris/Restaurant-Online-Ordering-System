@@ -1,7 +1,6 @@
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
-import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -22,7 +21,6 @@ import {
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -110,12 +108,6 @@ function CheckoutView() {
 
   const reviewCollectionRef = collection(db, 'review');
   const [reviews, setReviews] = useState([]);
-
-  const navigate = useNavigate();
-
-  const toCreateReview = async () => {
-    navigate('/createReview');
-  };
 
   useEffect(() => {
     const getReviews = async () => {
