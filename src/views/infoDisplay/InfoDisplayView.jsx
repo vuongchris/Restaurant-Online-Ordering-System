@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import './table.css';
-import '../../controllers/infoDisplay/InfoDisplayController';
+// import '../../controllers/infoDisplay/InfoDisplayController';
 
 function InfoDisplayView({ infoDisplay }) {
   return (
@@ -12,11 +12,15 @@ function InfoDisplayView({ infoDisplay }) {
             <th>Restaurant Name</th>
             <th>Location</th>
             <th>Distance</th>
+            <th>Operating Hours</th>
+            <th>Allow Pickups?</th>
           </tr>
           <tr>
-            <td>{restaurant.Restaurant_Branch}</td>
-            <td>Haymarket</td>
-            <td>1.2 km away</td>
+            <td>{restaurant.restaurantBranch}</td>
+            <td>{restaurant.Location}</td>
+            <td>{restaurant.Distance}</td>
+            <td>{restaurant.Hours}</td>
+            <td>{restaurant.pickUp}</td>
           </tr>
         </table>
       ))}

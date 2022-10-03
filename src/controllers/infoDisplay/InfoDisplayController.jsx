@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
@@ -40,7 +41,7 @@ function InfoDisplayController({ view }) {
   // };
 
   // return testViews[view];
-  return <InfoDisplayView />;
+  return <InfoDisplayView infoDisplay={infoDisplay} />;
 }
 
 export default InfoDisplayController;
