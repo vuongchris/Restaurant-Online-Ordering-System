@@ -100,11 +100,24 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
 };
+
 function CheckoutView() {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [addressLineOne, setAddressLineOne] = useState('');
+  const [addressLineTwo, setAddressLineTwo] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [deliveryInstructions, setDeliveryInstructions] = useState('');
+  const [specialRequests, setSpecialRequests] = useState('');
 
   const reviewCollectionRef = collection(db, 'review');
   const [reviews, setReviews] = useState([]);
@@ -131,6 +144,11 @@ function CheckoutView() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handleOrderSubmit = async () => {
+
+  };
+
   return (
     <div>
       <Grid
@@ -153,15 +171,69 @@ function CheckoutView() {
             spacing={1}
           >
             <Grid item xs={12} spacing={2}>
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="First Name" />
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="Last Name" />
-              <TextField style={{ width: '100%', fontSize: '20px' }} label="Address Line 1" />
-              <TextField style={{ width: '100%', fontSize: '20px' }} label="Address Line 2" />
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="City" />
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="State" />
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="Country" />
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="Postcode" />
-              <TextField style={{ width: '50%', fontSize: '20px' }} label="Phone Number" />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="First Name"
+                onChange={(event) => {
+                  setFirstName(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Last Name"
+                onChange={(event) => {
+                  setLastName(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '100%', fontSize: '20px' }}
+                label="Address Line 1"
+                onChange={(event) => {
+                  setAddressLineOne(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '100%', fontSize: '20px' }}
+                label="Address Line 2"
+                onChange={(event) => {
+                  setAddressLineTwo(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="City"
+                onChange={(event) => {
+                  setCity(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="State"
+                onChange={(event) => {
+                  setState(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Country"
+                onChange={(event) => {
+                  setCountry(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Postcode"
+                onChange={(event) => {
+                  setPostcode(event.target.value);
+                }}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Phone Number"
+                onChange={(event) => {
+                  setPhoneNumber(event.target.value);
+                }}
+              />
             </Grid>
           </Grid>
           <br />
@@ -176,6 +248,9 @@ function CheckoutView() {
                 multiline
                 rows={5}
                 maxRows={20}
+                onChange={(event) => {
+                  setDeliveryInstructions(event.target.value);
+                }}
               />
             </Grid>
           </Grid>
@@ -191,6 +266,9 @@ function CheckoutView() {
                 multiline
                 rows={5}
                 maxRows={20}
+                onChange={(event) => {
+                  setSpecialRequests(event.target.value);
+                }}
               />
             </Grid>
           </Grid>
@@ -241,7 +319,7 @@ function CheckoutView() {
         spacing={1}
       >
         <Grid item>
-          <Button variant="contained" size="large">Submit</Button>
+          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Submit</Button>
         </Grid>
       </Grid>
     </div>
