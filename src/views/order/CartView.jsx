@@ -102,7 +102,7 @@ function CartView() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('total');
 
-  const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items');
+  const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items', 'cartItems');
   const [items, setItems] = useState([]);
 
   useEffect(() => {
