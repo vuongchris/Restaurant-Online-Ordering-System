@@ -10,6 +10,8 @@ function InfoDisplayView({
   setNewRestaurant,
   setNewLocation,
   setNewDistance,
+  setNewHours,
+  setNewPickUp,
   deleteBranch,
   updateRestaurant,
 }) {
@@ -46,6 +48,8 @@ function InfoDisplayView({
       <input placeholder="branch name..." onChange={(event) => { setNewRestaurant(event.target.value); }} />
       <input placeholder="branch location..." onChange={(event) => { setNewLocation(event.target.value); }} />
       <input placeholder="distance..." onChange={(event) => { setNewDistance(event.target.value); }} />
+      <input placeholder="Hours..." onChange={(event) => { setNewHours(event.target.value); }} />
+      <input placeholder="Pick Up Support..." onChange={(event) => { setNewPickUp(event.target.value); }} />
       <button type="submit" onClick={addRestaurant}> test button </button>
       <div />
 

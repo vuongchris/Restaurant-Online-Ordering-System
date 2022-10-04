@@ -12,6 +12,8 @@ function InfoDisplayController({ view }) {
   const [newRestaurant, setNewRestaurant] = useState('');
   const [newLocation, setNewLocation] = useState('');
   const [newDistance, setNewDistance] = useState('');
+  const [newHours, setNewHours] = useState('');
+  const [newPickUp, setNewPickUp] = useState('');
 
   const [infoDisplay, setInfoDisplays] = useState([]);
   const infoDisplayCollection = collection(db, 'restaurant');
@@ -21,6 +23,8 @@ function InfoDisplayController({ view }) {
       restaurantBranch: newRestaurant,
       Location: newLocation,
       Distance: newDistance,
+      Hours: newHours,
+      pickUp: newPickUp,
     });
   };
 
@@ -88,6 +92,8 @@ function InfoDisplayController({ view }) {
       setNewRestaurant={setNewRestaurant}
       setNewLocation={setNewLocation}
       setNewDistance={setNewDistance}
+      setNewHours={setNewHours}
+      setNewPickUp={setNewPickUp}
       deleteBranch={deleteBranch}
       updateRestaurant={updateRestaurant}
     />
