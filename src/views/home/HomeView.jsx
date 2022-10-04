@@ -28,6 +28,8 @@ function HomeView() {
       <br />
       <Link to="payment">PAYMENT</Link>
       <br />
+      <Link to="Locations">LOCATIONS</Link>
+      <br />
       <Link to="specialRequest">SPECIAL REQUEST</Link>
       <br />
       <Link to="restaurantList">Restaurant List</Link>

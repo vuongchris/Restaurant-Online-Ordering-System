@@ -13,6 +13,7 @@ import CustomerService from './views/customer_service/CustomerService';
 import Navbar from './views/navbar/Navbar';
 import SpecialRequest from './views/special_request/SpecialRequest';
 import ReviewController from './controllers/review/ReviewController';
+import LocationController from './controllers/location/LocationController';
 
 function Routes() {
   return (
@@ -25,6 +26,7 @@ function Routes() {
           <Route path="/register" element={<AuthController view="register" />} />
           <Route path="/checkout" element={<OrderController view="checkout" />} />
           <Route path="/payment" element={<PaymentController view="payment" />} />
+          <Route path="/locations" element={<LocationController view="Locations" />} />
           <Route path="/cart" element={<OrderController view="cart" />} />
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList" />} />

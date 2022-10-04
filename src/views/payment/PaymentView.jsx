@@ -1,55 +1,84 @@
 /* eslint-disable linebreak-style */
-import { Button } from '@mui/material';
-import React from 'react';
-import { useAuth } from '../../contexts/auth/AuthContext';
+import React, { useState } from 'react';
+import { Button, Grid, TextField } from '@mui/material';
+import { CheckBox } from '@mui/icons-material';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-function PaymentView() {
-  // Temporarily place logout button in homepage
-  const { currentUser, logout } = useAuth();
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (ex) {
-      // eslint-disable-next-line no-console
-      console.log(ex);
-    }
-  };
-
+function PaymentView(submitPayment, numberRef, nameRef, expiryRef, ccvRef, saveRef) {
+  const [startDate, setStartDate] = useState(new Date());
   return (
-    <div
-      style={{ textAlign: 'center' }}
-    >
-      <h1>Welcome to 41026 - Advanced Software Development!</h1>
-      <br />
-      <form action="/OrderConfirmed" method="POST">
-        Card Number:
-        <input type="text" name="cardNumber" required />
-        Name:
-        <input type="text" name="name" required />
-        Expiry Date:
-        <input type="date" name="expiryDate" required />
-        CVC:
-        <input type="text" name="CVC" required />
-      </form>
-
-      {/** Display a logout button if a user is signed in */}
-      {currentUser && (
-        <div>
-          <h3>
-            Welcome,
-            {' '}
-            {currentUser.email}
-          </h3>
+    <form onSubmit={submitPayment}>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
+      >
+        <Grid item>
+          Card Number
+        </Grid>
+        <Grid item>
+          <TextField
+            label="cardNumber"
+            required
+            inputRef={numberRef}
+          />
+        </Grid>
+        <Grid item>
+          Name on card
+        </Grid>
+        <Grid item>
+          <TextField
+            label="name"
+            required
+            inputRef={nameRef}
+          />
+        </Grid>
+        <Grid item>
+          Expiry Date
+        </Grid>
+        <Grid item>
+          <DatePicker
+            label="expiryDate"
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            required
+            inputRef={expiryRef}
+          />
+        </Grid>
+        <Grid item>
+          CCV
+        </Grid>
+        <Grid item>
+          <TextField
+            label="ccv"
+            required
+            inputRef={ccvRef}
+          />
+        </Grid>
+        <Grid item>
+          Save Payment Details?
+        </Grid>
+        <Grid item>
+          <CheckBox
+            label="Save"
+            required
+            inputRef={saveRef}
+          />
+        </Grid>
+        <Grid item>
           <Button
+            type="submit"
             variant="contained"
             size="large"
-            onClick={handleLogout}
           >
-            Logout
+            submit
           </Button>
-        </div>
-      )}
-    </div>
+        </Grid>
+      </Grid>
+    </form>
   );
 }
 
