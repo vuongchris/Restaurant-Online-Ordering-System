@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { render, screen, getDefaultNormalizer } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
