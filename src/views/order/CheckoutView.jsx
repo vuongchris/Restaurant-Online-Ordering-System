@@ -195,7 +195,7 @@ function CheckoutView() {
             container
             spacing={1}
           >
-            <Grid item xs={12} spacing={2}>
+            <Grid item xs={12}>
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="First Name"
@@ -276,7 +276,7 @@ function CheckoutView() {
             container
             spacing={1}
           >
-            <Grid item xs={12} spacing={1}>
+            <Grid item xs={12}>
               <TextField
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Delivery Instructions"
@@ -294,7 +294,7 @@ function CheckoutView() {
             container
             spacing={1}
           >
-            <Grid item xs={12} spacing={1}>
+            <Grid item xs={12}>
               <TextField
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Special Requests"
