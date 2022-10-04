@@ -12,37 +12,37 @@ test('renders react component', async () => {
 });
 
 describe('Checkout View tests', () => {
-  const firstName = screen.getByLabelText(/First Name/i, {
+  const firstName = screen.getByText(/First Name/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const lastName = screen.getByLabelText(/Last Name/i, {
+  const lastName = screen.getByText(/Last Name/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const addressLineOne = screen.getByLabelText(/Address Line 1/i, {
+  const addressLineOne = screen.getByText(/Address Line 1/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const addressLineTwo = screen.getByLabelText(/Address Line 2/i, {
+  const addressLineTwo = screen.getByText(/Address Line 2/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const city = screen.getByLabelText(/City/i, {
+  const city = screen.getByText(/City/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const state = screen.getByLabelText(/State/i, {
+  const state = screen.getByText(/State/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const country = screen.getByLabelText(/Country/i, {
+  const country = screen.getByText(/Country/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const postcode = screen.getByLabelText(/Postcode/i, {
+  const postcode = screen.getByText(/Postcode/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const phoneNumber = screen.getByLabelText(/Phone Number/i, {
+  const phoneNumber = screen.getByText(/Phone Number/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const deliveryInstructions = screen.getByLabelText(/Delivery Instructions/i, {
+  const deliveryInstructions = screen.getByText(/Delivery Instructions/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const specialRequests = screen.getByLabelText(/Special Requests/i, {
+  const specialRequests = screen.getByText(/Special Requests/i, {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
 
