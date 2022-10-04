@@ -14,6 +14,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import TablePagination from '@mui/material/TablePagination/TablePagination';
 import { visuallyHidden } from '@mui/utils';
 import { RowingSharp } from '@mui/icons-material';
 import {
@@ -108,6 +109,8 @@ EnhancedTableHead.propTypes = {
 function OrderHistoryView() {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('order');
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const orderCollectionRef = collection(db, 'order');
   const [orders, setOrders] = useState([]);
@@ -119,6 +122,15 @@ function OrderHistoryView() {
     };
     getOrders();
   }, []);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -167,6 +179,15 @@ function OrderHistoryView() {
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={orders.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Paper>
         </Grid>
       </Grid>

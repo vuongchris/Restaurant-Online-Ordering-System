@@ -67,7 +67,7 @@ function CreateReviewView() {
           />
           <TextField
             style={{ width: '100%', fontSize: '20px' }}
-            label="Review Description"
+            label="Description"
             required
             multiline
             rows={5}
