@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { visuallyHidden } from '@mui/utils';
 import {
-  collection, query, where, getDocs,
+  collection, query, where, getDocs, doc,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 
@@ -108,7 +108,7 @@ function CartView() {
   useEffect(() => {
     const getItems = async () => {
       const data = await getDocs(reviewCollectionRef);
-      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setItems(data.docs.map((_doc) => ({ ..._doc.data(), id: _doc.id })));
     };
   }, []);
 
