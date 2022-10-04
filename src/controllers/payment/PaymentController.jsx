@@ -1,18 +1,28 @@
 /* eslint-disable react/prop-types */
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../contexts/auth/AuthContext';
+import { getSavedPaymentDetails } from '../../services/account/AccountService';
 import PaymentView from '../../views/payment/PaymentView';
 
 function PaymentController() {
-  const numberRef = useRef();
-  const nameRef = useRef();
-  const expiryRef = useRef();
-  const ccvRef = useRef();
-  const saveRef = useRef();
-
-  /*const submitPayment = async (e) => {
+  const currentUser = useAuth();
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  /* const [formData] = useState(
+    {
+      cardName: '',
+      cardNumber: '',
+      ccv: null,
+      expiryDate: null,
+    },
+  ); */
+  useEffect(() => {
+    const setState = async () => setPaymentMethods(await getSavedPaymentDetails(currentUser.uid));
+    setState();
+  }, []);
+  /* const submitPayment = async (e) => {
     e.PreventDefault();
-  };*/
-  return <PaymentView />;
+  }; */
+  return <PaymentView payments={paymentMethods} />;
 }
 
 export default PaymentController;

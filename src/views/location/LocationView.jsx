@@ -1,13 +1,12 @@
-/* eslint-disable linebreak-style */
-import { Button } from '@mui/material';
+/* eslint-disable react/prop-types */
 import React from 'react';
 
 function LocationView({ locations }) {
   // locationList.forEach((doc) => { <li>{doc.data()}</li>; });
   // const list = locationList.map((d) => (<li key={d.name}> {d.data} </li>));
   return (
-    <div>
-      <h1>Saved Payment Details</h1>
+    <div style={{ textAlign: 'center' }}>
+      <h1>Locations</h1>
       {locations.map((location, index) => (
         <div key={location.Name}>
           <h2>
