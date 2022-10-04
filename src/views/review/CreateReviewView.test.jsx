@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, getDefaultNormalizer } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import CreateReviewView from './CreateReviewView';
@@ -12,10 +12,18 @@ test('renders react component', async () => {
 });
 
 describe('Checkout View tests', () => {
-  const item = screen.getByLabelText(/Item/i);
-  const reviewDescription = screen.getByLabelText(/Review Description/i);
-  const submit = screen.getByText(/Submit/i);
-  const cancel = screen.getByText(/Cancel/i);
+  const item = screen.getByLabelText(/Item/i, {
+    normalizer: getDefaultNormalizer({ trim: false }),
+  });
+  const reviewDescription = screen.getByLabelText(/Review Description/i, {
+    normalizer: getDefaultNormalizer({ trim: false }),
+  });
+  const submit = screen.getByText(/Submit/i, {
+    normalizer: getDefaultNormalizer({ trim: false }),
+  });
+  const cancel = screen.getByText(/Cancel/i, {
+    normalizer: getDefaultNormalizer({ trim: false }),
+  });
 
   it('All fields should be present on the page', () => {
     expect(item).toBeInTheDocument();
