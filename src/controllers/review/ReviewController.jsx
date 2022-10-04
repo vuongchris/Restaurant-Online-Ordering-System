@@ -1,11 +1,13 @@
 import React from 'react';
-import ReviewView from '../../views/review/ReviewView';
-import ReviewHistoryView from '../../views/review/ReviewHistoryView';
+import CreateReviewView from '../../views/review/CreateReviewView';
+import EditReviewView from '../../views/review/EditReviewView';
+import ReviewsView from '../../views/review/ReviewsView';
 
 function ReviewController({ view }) {
   const reviewViews = {
-    review: <ReviewView />,
-    reviewHistory: <ReviewHistoryView />,
+    createReview: <CreateReviewView />,
+    editReview: <EditReviewView />,
+    reviews: <ReviewsView />,
   };
   return reviewViews[view];
 }

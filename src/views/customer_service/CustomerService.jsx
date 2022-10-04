@@ -19,14 +19,16 @@ function CustomerService({
       </div>
       <div>
         <TextField
-          style={{ width: '20%', fontSize: '20px', margin: '20px' }}
-          label="Customer Serivce"
+          style={{ width: '30%', fontSize: '20px', margin: '20px' }}
+          label="Customer Service"
           required
           multiline
-          rows={5}
+          minRows={5}
           maxRows={10}
           inputRef={customerServiceRef}
         />
+        <br />
+        <Button variant="contained" size="large">Submit</Button>
       </div>
     </div>
 

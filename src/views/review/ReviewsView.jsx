@@ -1,24 +1,27 @@
-/* eslint-disable no-undef */
+/* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
 import { visuallyHidden } from '@mui/utils';
-import { RowingSharp } from '@mui/icons-material';
 import {
-  collection, query, where, getDocs,
+  collection, deleteDoc, doc, getDocs,
 } from 'firebase/firestore';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -39,28 +42,28 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
-    id: 'order',
+    id: 'item',
     numeric: false,
     disablePadding: false,
-    label: 'Order',
+    label: 'Item',
   },
   {
-    id: 'date',
+    id: 'rating',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Rating',
   },
   {
-    id: 'status',
+    id: 'description',
     numeric: false,
     disablePadding: false,
-    label: 'Status',
+    label: 'Description',
   },
   {
-    id: 'total',
-    numeric: true,
+    id: 'options',
+    numeric: false,
     disablePadding: false,
-    label: 'Total',
+    label: 'Options',
   },
 ];
 
@@ -105,26 +108,63 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function OrderHistoryView() {
-  const [order, setOrder] = useState('desc');
-  const [orderBy, setOrderBy] = useState('order');
+function ReviewsView() {
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('total');
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const orderCollectionRef = collection(db, 'order');
-  const [orders, setOrders] = useState([]);
+  const reviewCollectionRef = collection(db, 'review');
+  const [reviews, setReviews] = useState([]);
+
+  const navigate = useNavigate();
+
+  const toCreateReview = async () => {
+    navigate('/createReview');
+  };
 
   useEffect(() => {
-    const getOrders = async () => {
-      const data = await getDocs(orderCollectionRef);
-      setOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const getReviews = async () => {
+      const data = await getDocs(reviewCollectionRef);
+      setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
-    getOrders();
+    getReviews();
   }, []);
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const openReview = async (reviewId, reviewItem, reviewRating, reviewDescription) => {
+    navigate('/editReview', {
+      state: {
+        id: reviewId, item: reviewItem, rating: reviewRating, description: reviewDescription,
+      },
+    });
+  };
+
+  const deleteReview = async (id) => {
+    try {
+      const reviewDoc = doc(db, 'review', id);
+      await deleteDoc(reviewDoc);
+      console.log('Document deleted!');
+    } catch (e) {
+      console.error('Error deleting document: ', e);
+    }
+    window.location.reload();
+  };
+
   return (
     <div>
       <Grid
@@ -135,9 +175,11 @@ function OrderHistoryView() {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Order History</Typography>
+          <Typography variant="h3">Reviews</Typography>
         </Grid>
-
+        <Grid item>
+          <Button variant="contained" onClick={toCreateReview}>Create Review</Button>
+        </Grid>
         <Grid item>
           <Paper>
             <TableContainer>
@@ -148,25 +190,40 @@ function OrderHistoryView() {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {orders.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow>
+                  {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
+                    <TableRow key={row.item}>
                       <TableCell>
-                        {row.order}
+                        {row.item}
                       </TableCell>
                       <TableCell>
-                        {row.date}
+                        {row.rating}
                       </TableCell>
                       <TableCell>
-                        {row.status}
+                        {row.description}
                       </TableCell>
                       <TableCell>
-                        {row.total}
+                        <Button onClick={() => {
+                          openReview(row.id, row.item, row.rating, row.description);
+                        }}
+                        >
+                          Edit
+                        </Button>
+                        <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={reviews.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Paper>
         </Grid>
       </Grid>
@@ -174,4 +231,4 @@ function OrderHistoryView() {
   );
 }
 
-export default OrderHistoryView;
+export default ReviewsView;

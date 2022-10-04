@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -14,21 +15,10 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { visuallyHidden } from '@mui/utils';
-
-function createData(item, quantity, total) {
-  return {
-    item,
-    quantity,
-    total,
-  };
-}
-
-const rows = [
-  createData('Chicken Burger', 2, 5.00),
-  createData('Hamburger', 1, 2.50),
-  createData('Chocolate Sundae', 1, 3.00),
-  createData('Large Coke', 1, 4.00),
-];
+import {
+  collection, query, where, getDocs,
+} from 'firebase/firestore';
+import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -112,6 +102,16 @@ function CartView() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('total');
 
+  const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items');
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const getItems = async () => {
+      const data = await getDocs(reviewCollectionRef);
+      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+  }, []);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -139,6 +139,21 @@ function CartView() {
                   orderBy={orderBy}
                   onRequestSort={handleRequestSort}
                 />
+                <TableBody>
+                  {items.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
+                    <TableRow>
+                      <TableCell>
+                        {row.item}
+                      </TableCell>
+                      <TableCell>
+                        {row.quantity}
+                      </TableCell>
+                      <TableCell>
+                        {row.total}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </TableContainer>
           </Paper>

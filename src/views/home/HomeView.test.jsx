@@ -7,29 +7,35 @@ jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
 }));
 
-describe('Home View tests', () => {
-  it('Logout button should be visible if a user is logged in', () => {
+describe('Home View Test Cases', () => {
+  it('When a user is logged in, they should be welcome by their email, and a logout button should be shown', () => {
+    // Arrange
+    const contextValues = { currentUser: { email: 'Test@email.com' } };
+    jest.spyOn(Auth, 'useAuth').mockImplementation(() => contextValues);
+
+    // Act
     render(<HomeView />);
     const text = screen.getByText(/Welcome to 41026/i);
     const logoutBtn = screen.getByText('Logout');
+    const welcomeUserMessage = screen.getByText(`Welcome, ${contextValues.currentUser.email}`);
 
-    const contextValues = { currentUser: { name: 'Test-Name' } };
-    const welcomeUserMessage = screen.getByText(`Welcome ${contextValues.currentUser.name}`);
-    jest.spyOn(Auth, 'useAuth').mockImplementation(() => contextValues);
-
+    // Assert
     expect(text).toBeInTheDocument();
     expect(logoutBtn).toBeInTheDocument();
     expect(welcomeUserMessage).toBeInTheDocument();
   });
 
-  it('Logout button should not be visible if a user is not logged in', () => {
-    render(<HomeView />);
-    const text = screen.getByText(/Welcome to 41026/i);
-    const logoutBtn = screen.getByText('Logout');
-
-    const contextValues = { currentUser: { name: null } };
+  it('Logout button should not be visible if the current user is not logged in', () => {
+    // Arrange
+    const contextValues = { currentUser: null };
     jest.spyOn(Auth, 'useAuth').mockImplementation(() => contextValues);
 
+    // Act
+    render(<HomeView />);
+    const text = screen.getByText(/Welcome to 41026/i);
+    const logoutBtn = screen.queryByText(/logout/i);
+
+    // Assert
     expect(text).toBeInTheDocument();
     expect(logoutBtn).not.toBeInTheDocument();
   });
