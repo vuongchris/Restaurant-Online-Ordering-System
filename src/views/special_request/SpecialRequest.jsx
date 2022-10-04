@@ -22,6 +22,9 @@ function SpecialRequest({
           maxRows={11}
           inputRef={specialReqRef}
         />
+        <br />
+        <br />
+        <Button variant="contained" size="large">Submit Request</Button>
       </div>
     </div>
 
