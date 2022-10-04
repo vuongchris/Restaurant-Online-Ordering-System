@@ -30,6 +30,7 @@ function Routes() {
           <Route path="/cart" element={<OrderController view="cart" />} />
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList" />} />
+          <Route path="/restaurantDemo" element={<InfoDisplayController view="display" />} />
           <Route path="/customerService" element={<CustomerService />} />
           <Route path="/account" element={<AccountController />} />
           <Route path="/orderHistory" element={<OrderController view="orderHistory" />} />
