@@ -5,7 +5,13 @@ import './table.css';
 // import '../../controllers/infoDisplay/InfoDisplayController';
 
 function InfoDisplayView({
-  infoDisplay, addRestaurant, setNewRestaurant, setNewLocation, setNewDistance, deleteBranch,
+  infoDisplay,
+  addRestaurant,
+  setNewRestaurant,
+  setNewLocation,
+  setNewDistance,
+  deleteBranch,
+  updateRestaurant,
 }) {
   return (
     <>
@@ -18,7 +24,8 @@ function InfoDisplayView({
             <th>Distance</th>
             <th>Operating Hours</th>
             <th>Allow Pickups?</th>
-            <th>Delete Selected Branch</th>
+            <th>Delete Branch</th>
+            <th>Update Branch</th>
           </tr>
 
           {infoDisplay.map((restaurant) => (
@@ -29,7 +36,8 @@ function InfoDisplayView({
               <td>{restaurant.Distance}</td>
               <td>{restaurant.Hours}</td>
               <td>{restaurant.pickUp}</td>
-              <button type="submit" onClick={() => { deleteBranch(); }}>Delete Branch</button>
+              <td><button type="submit" onClick={() => { deleteBranch(restaurant.id); }}>Delete Branch</button></td>
+              <td><button type="submit" onClick={() => { updateRestaurant(); }}>Update Branch</button></td>
             </tr>
           ))}
         </table>

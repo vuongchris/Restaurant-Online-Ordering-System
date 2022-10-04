@@ -29,9 +29,9 @@ function InfoDisplayController({ view }) {
     // basically gets a query going for specifically restaurant docs
     const querySnapshot = await getDocs(q);
     let id = '';
-    querySnapshot.forEach(async (doc) => {
+    querySnapshot.forEach(async (document) => {
     // this line will get the document id of the restaurant
-      id = doc.id;
+      id = document.id;
       const getRestaurant = doc(db, 'restaurant', id);
       // Set the updated document
       await updateDoc(getRestaurant, {
@@ -42,14 +42,17 @@ function InfoDisplayController({ view }) {
   };
 
   const deleteBranch = async (id) => {
-    const restaurantDoc = doc(db, 'users', id);
+    const restaurantDoc = doc(db, 'restaurant', id);
     await deleteDoc(restaurantDoc);
   };
 
   useEffect(() => {
     const getInfoDisplay = async () => {
       const data = await getDocs(infoDisplayCollection);
-      setInfoDisplays(await Promise.all((data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))));
+      setInfoDisplays(await Promise.all(
+        (data.docs.map((document) => ({ ...document.data(), id: document.id }))
+        ),
+      ));
     };
 
     getInfoDisplay();
@@ -86,6 +89,7 @@ function InfoDisplayController({ view }) {
       setNewLocation={setNewLocation}
       setNewDistance={setNewDistance}
       deleteBranch={deleteBranch}
+      updateRestaurant={updateRestaurant}
     />
   );
 }
