@@ -1,13 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import CheckoutView from './CheckoutView';
 
-jest.mock('react-router-dom', () => ({
-  Link: jest.fn(),
-}));
+test('renders react component', async () => {
+  render(
+    <Router>
+      <CheckoutView />
+    </Router>,
+  );
 
-describe('Checkout View tests', () => {
-  render(<CheckoutView />);
   const firstName = screen.getByLabelText(/First Name/i);
   const lastName = screen.getByLabelText(/Last Name/i);
   const addressLineOne = screen.getByLabelText(/Address Line 1/i);

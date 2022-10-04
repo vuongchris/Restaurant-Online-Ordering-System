@@ -1,13 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import CreateReviewView from './CreateReviewView';
 
-jest.mock('react-router-dom', () => ({
-  Link: jest.fn(),
-}));
+test('renders react component', async () => {
+  render(
+    <Router>
+      <CreateReviewView />
+    </Router>,
+  );
 
-describe('Checkout View tests', () => {
-  render(<CreateReviewView />);
   const item = screen.getByLabelText(/Item/i);
   const reviewDescription = screen.getByLabelText(/Review Description/i);
   const submit = screen.getByText(/Submit/i);
