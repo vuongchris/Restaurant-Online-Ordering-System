@@ -2,14 +2,13 @@
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import { updateDoc, doc } from 'firebase/firestore';
-import { useLocation } from 'react-router-dom';
 import { db } from '../../firebase';
 
 function EditReviewView() {

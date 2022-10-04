@@ -6,20 +6,19 @@ jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
 }));
 
-describe('Payment View tests', () => {
+describe('Checkout View tests', () => {
   render(<CheckoutView />);
-  const firstName = screen.getByText(/First Name/i);
-  const lastName = screen.getByText(/Last Name/i);
-  const addressLineOne = screen.getByText(/Address Line 1/i);
-  const addressLineTwo = screen.getByText(/Address Line 2/i);
-  const city = screen.getByText(/City/i);
-  const state = screen.getByText(/State/i);
-  const country = screen.getByText(/Country/i);
-  const postcode = screen.getByText(/Postcode/i);
-  const phoneNumber = screen.getByText(/Phone Number/i);
-  const deliveryInstructions = screen.getByText(/Delivery Instructions/i);
-  const specialRequests = screen.getByText(/Special Requests/i);
-  const submit = screen.getByText(/Submit/i);
+  const firstName = screen.getByLabelText(/First Name/i);
+  const lastName = screen.getByLabelText(/Last Name/i);
+  const addressLineOne = screen.getByLabelText(/Address Line 1/i);
+  const addressLineTwo = screen.getByLabelText(/Address Line 2/i);
+  const city = screen.getByLabelText(/City/i);
+  const state = screen.getByLabelText(/State/i);
+  const country = screen.getByLabelText(/Country/i);
+  const postcode = screen.getByLabelText(/Postcode/i);
+  const phoneNumber = screen.getByLabelText(/Phone Number/i);
+  const deliveryInstructions = screen.getByLabelText(/Delivery Instructions/i);
+  const specialRequests = screen.getByLabelText(/Special Requests/i);
 
   it('All fields should be present on the page', () => {
     expect(firstName).toBeInTheDocument();
@@ -33,6 +32,5 @@ describe('Payment View tests', () => {
     expect(phoneNumber).toBeInTheDocument();
     expect(deliveryInstructions).toBeInTheDocument();
     expect(specialRequests).toBeInTheDocument();
-    expect(submit).toBeInTheDocument();
   });
 });
