@@ -21,7 +21,7 @@ import {
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {

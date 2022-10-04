@@ -2,7 +2,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
