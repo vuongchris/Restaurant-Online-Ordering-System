@@ -12,16 +12,16 @@ test('renders react component', async () => {
 });
 
 describe('Checkout View tests', () => {
-  const item = screen.getByLabelText(/Item/i, {
+  const item = screen.getByLabelText('Item', {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const reviewDescription = screen.getByLabelText(/Description/i, {
+  const reviewDescription = screen.getByLabelText('Description', {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const submit = screen.getByText(/Submit/i, {
+  const submit = screen.getByText('Submit', {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
-  const cancel = screen.getByText(/Cancel/i, {
+  const cancel = screen.getByText('Cancel', {
     normalizer: getDefaultNormalizer({ trim: false }),
   });
 
