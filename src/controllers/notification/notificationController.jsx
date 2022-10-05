@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
 import React from 'react';
 import emailjs from '@emailjs/browser';
-import notificationView from '../../views/notification/notificationView';
+import NotificationView from '../../views/notification/notificationView';
 
-function notificationController() {
+function NotificationController() {
   // const form = useRef();
 
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('gmail', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
+    emailjs.sendForm('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
       .then((result) => {
         console.log(result.text);
       }, (error) => {
@@ -19,10 +19,10 @@ function notificationController() {
   };
 
   return (
-    <notificationView
+    <NotificationView
       sendEmail={sendEmail}
     />
   );
 }
 
-export default notificationController;
+export default NotificationController;

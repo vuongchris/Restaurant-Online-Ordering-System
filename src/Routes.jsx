@@ -8,7 +8,7 @@ import AuthController from './controllers/auth/AuthController';
 import OrderController from './controllers/order/OrderController';
 import HomeController from './controllers/home/HomeController';
 import InfoDisplayController from './controllers/infoDisplay/InfoDisplayController';
-import notificationController from './controllers/notification/notificationController';
+import NotificationController from './controllers/notification/notificationController';
 import PaymentController from './controllers/payment/PaymentController';
 import CustomerService from './views/customer_service/CustomerService';
 import Navbar from './views/navbar/Navbar';
@@ -32,7 +32,7 @@ function Routes() {
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList" />} />
           <Route path="/restaurantDemo" element={<InfoDisplayController view="display" />} />
-          <Route path="/notifier" element={<notificationController />} />
+          <Route path="/notifier" element={<NotificationController />} />
           <Route path="/customerService" element={<CustomerService />} />
           <Route path="/account" element={<AccountController />} />
           <Route path="/orderHistory" element={<OrderController view="orderHistory" />} />

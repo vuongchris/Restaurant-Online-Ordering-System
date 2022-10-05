@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import './Notification.css';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import notificationController from '../../controllers/notification/notificationController';
 
-function notificationView({ sendEmail }) {
+function NotificationView({ sendEmail }) {
   return (
     <div>
       <div className="container">
@@ -31,4 +32,4 @@ function notificationView({ sendEmail }) {
   );
 }
 
-export default notificationView;
+export default NotificationView;
