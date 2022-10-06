@@ -1,12 +1,12 @@
 # Advanced Software Development Project
 # Restaurant Online Ordering System
 
-## Team ASD-Wed-5 members
-Mostafa Rahinuzzaman - 14267532
-Kevin Chow - 13722158
-Brendan Oates - 14057261
-Christopher Vuong - 13568530
-Dylan Voon - 13755273
+## ASD-Wed-5: Team Members
+- Mostafa Rahinuzzaman - 14267532
+- Kevin Chow - 13722158
+- Brendan Oates - 14057261
+- Christopher Vuong - 13568530
+- Dylan Voon - 13755273
 
 ## Summary
 This project was initialised with [Create React App](https://github.com/facebook/create-react-app).
