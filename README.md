@@ -9,8 +9,8 @@
 - Dylan Voon - 13755273
 
 ## Summary
-This project was initialised with [Create React App](https://github.com/facebook/create-react-app).
-This project is a Full Stack stack Web Application designed to function as a restuarant website.
+- This project was initialised with [Create React App](https://github.com/facebook/create-react-app).
+- This project is a Full Stack stack Web Application designed to function as a restuarant website.
 
 ## Features
 - User Authentication
