@@ -1,8 +1,34 @@
 # Advanced Software Development Project
 # Restaurant Online Ordering System
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Team ASD-Wed-5 members
+Mostafa Rahinuzzaman - 14267532
+Kevin Chow - 13722158
+Brendan Oates - 14057261
+Christopher Vuong - 13568530
+Dylan Voon - 13755273
+
+## Summary
+This project was initialised with [Create React App](https://github.com/facebook/create-react-app).
+This project is a Full Stack stack Web Application designed to function as a restuarant website.
+
+## Features
+- User Authentication
+- Account Management
+- Food and Restaurant Information
+- Food Ordering and Delivery Services
+- Payment Options and Services
+- Location Services
+- Communication Services via Email and Mobile Phone 
+- Customer Service and Special Requests
+- Ratings and Reviews
+
+## Project Structure
+- This project follows the MVC Architecture Pattern to separate and organise the different components of the project.
+- In the `src` directory, MVC folders - `models`, `views` and `controllers` are present.
+- Within each MVC folder exists multiple folders named after the specific features of the application.
+- Each of the feature folders hold JavaScript file(s) which contain the programmatic logic of the website.
+- Each feature has its respective Model, View and Controller file(s).
 
 ## Available Scripts
 
@@ -28,45 +54,3 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
