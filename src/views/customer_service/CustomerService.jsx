@@ -2,12 +2,27 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import { Button, Grid, TextField } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
+import { addDoc, collection } from 'firebase/firestore';
+import Popup from 'reactjs-popup';
+import { db } from '../../firebase';
 
-function CustomerService({
-  // eslint-disable-next-line no-unused-vars
-  customerServiceRef,
-}) {
+function CustomerService() {
+  const [newCustomerTicket, setCustomerTicket] = useState('');
+
+  const customerServiceRef = collection(db, 'customerTicket');
+
+  const handleSubmitButton = async () => {
+    try {
+      await addDoc(customerServiceRef, {
+        customerTicket: newCustomerTicket,
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Error, cant create ticket: ', e);
+    }
+  };
+
   return (
     <div
       style={{ textAlign: 'center' }}
@@ -21,17 +36,39 @@ function CustomerService({
         <TextField
           style={{ width: '30%', fontSize: '20px', margin: '20px' }}
           label="Customer Service"
-          required
           multiline
           minRows={5}
           maxRows={10}
-          inputRef={customerServiceRef}
+          required
+          onChange={(event) => {
+            setCustomerTicket(event.target.value);
+          }}
         />
         <br />
-        <Button variant="contained" size="large">Submit</Button>
+        <div>
+          <Popup
+            trigger={(
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleSubmitButton}
+              >
+                Submit
+              </Button>
+)}
+            position="right center"
+          >
+            <div>Successfully submitted</div>
+          </Popup>
+        </div>
         <br />
         <br />
-        <Button variant="contained" size="large">Cancel</Button>
+        <Button
+          variant="contained"
+          size="large"
+        >
+          Cancel
+        </Button>
       </div>
     </div>
 
