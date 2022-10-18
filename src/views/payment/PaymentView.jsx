@@ -60,7 +60,6 @@ function PaymentView({ refs, submitPayment, loading }) {
           <input
             type="checkbox"
             label="Save Paymanent Details?"
-            required
             ref={refs.saveDetailsRef}
           />
         </Grid>
