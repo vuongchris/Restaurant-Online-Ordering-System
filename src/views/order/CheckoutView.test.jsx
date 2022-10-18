@@ -4,6 +4,11 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import CheckoutView from './CheckoutView';
 
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useEffect: jest.fn(),
+}));
+
 describe('Review View tests', () => {
   it('All items should be present on the page', () => {
     // Arrange

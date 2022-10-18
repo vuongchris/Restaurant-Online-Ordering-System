@@ -37,10 +37,6 @@ function CreateReviewView() {
     }
   };
 
-  const toReviews = async () => {
-    navigate('/reviews');
-  };
-
   return (
     <div>
       <Grid
@@ -95,7 +91,7 @@ function CreateReviewView() {
             variant="contained"
             size="large"
             color="error"
-            onClick={toReviews}
+            onClick={() => navigate('/reviews')}
           >
             Cancel
 

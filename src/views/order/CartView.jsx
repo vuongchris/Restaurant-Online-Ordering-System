@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -14,10 +14,12 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import { visuallyHidden } from '@mui/utils';
 import {
   collection, query, where, getDocs, doc,
 } from 'firebase/firestore';
+import { useNavigate } from 'react-router';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -99,11 +101,13 @@ EnhancedTableHead.propTypes = {
 };
 
 function CartView() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('total');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('total');
 
   const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items', 'cartItems');
   const [items, setItems] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getItems = async () => {
@@ -159,7 +163,7 @@ function CartView() {
           </Paper>
         </Grid>
         <Grid item>
-          <Link to="/checkout">CHECKOUT</Link>
+          <Button variant="contained" size="large" onClick={() => navigate('/checkout')}>Checkout</Button>
         </Grid>
       </Grid>
     </div>

@@ -114,21 +114,13 @@ function ReviewsView() {
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const reviewCollectionRef = collection(db, 'review');
   const [reviews, setReviews] = useState([]);
 
   const navigate = useNavigate();
-
-  const toCreateReview = async () => {
-    navigate('/createReview');
-  };
-
-  const toLogin = async () => {
-    navigate('/login');
-  };
 
   useEffect(() => {
     if (currentUser != null) {
@@ -189,7 +181,7 @@ function ReviewsView() {
             <Typography variant="h3">Reviews</Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={toCreateReview}>Create Review</Button>
+            <Button variant="contained" onClick={() => navigate('/createReview')}>Create Review</Button>
           </Grid>
           <Grid item>
             <Paper>
@@ -255,10 +247,10 @@ function ReviewsView() {
           <Typography variant="h3">Reviews</Typography>
         </Grid>
         <Grid item>
-          <Typography variant="p">To view reviews, you need to login</Typography>
+          <Typography variant="p">To create, edit or view reviews, you need to login.</Typography>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={toLogin}>Login</Button>
+          <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
         </Grid>
       </Grid>
     </div>

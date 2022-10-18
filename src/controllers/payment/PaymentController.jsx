@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-alert */
 import { Timestamp } from 'firebase/firestore';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
