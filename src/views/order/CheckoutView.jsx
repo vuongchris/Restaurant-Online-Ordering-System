@@ -281,7 +281,7 @@ function CheckoutView() {
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Delivery Instructions"
                 multiline
-                rows={5}
+                minRows={5}
                 maxRows={20}
                 onChange={(event) => {
                   setDeliveryInstructions(event.target.value);
@@ -299,7 +299,7 @@ function CheckoutView() {
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Special Requests"
                 multiline
-                rows={5}
+                minRows={5}
                 maxRows={20}
                 onChange={(event) => {
                   setSpecialRequests(event.target.value);
@@ -319,7 +319,7 @@ function CheckoutView() {
                 />
                 <TableBody>
                   {orders.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow key={row.item}>
+                    <TableRow key={row.description}>
                       <TableCell>
                         {row.item}
                       </TableCell>

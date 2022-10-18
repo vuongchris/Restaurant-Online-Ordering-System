@@ -14,6 +14,7 @@ function AuthController({ view }) {
 
   const navigate = useNavigate();
 
+  // Register the user when they click submit on the register page
   const handleRegistration = async (e) => {
     e.preventDefault();
 
@@ -33,6 +34,7 @@ function AuthController({ view }) {
     }
   };
 
+  // Login in the user when they click submit on the login page
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -46,6 +48,7 @@ function AuthController({ view }) {
     }
   };
 
+  // Render a different view depending on the URL route
   const authViews = {
     login: <LoginView
       emailRef={emailRef}

@@ -12,13 +12,12 @@ function SpecialRequest({
     >
       <h1>Please add your special request here</h1>
       <div>
-        {/* text field for special reuqests */}
         <TextField
           style={{ width: '20%', fontSize: '20px' }}
           label="Special Request"
           required
           multiline
-          rows={5}
+          minRows={5}
           maxRows={11}
           inputRef={specialReqRef}
         />

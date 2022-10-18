@@ -2,8 +2,10 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useNavigate } from 'react-router';
 
 function PaymentView({ refs, submitPayment, loading }) {
+  const navigate = useNavigate();
   return (
     <form onSubmit={submitPayment}>
       <Grid
@@ -75,10 +77,10 @@ function PaymentView({ refs, submitPayment, loading }) {
         </Grid>
         <Grid item>
           <Button
-            type="submit"
             variant="contained"
             size="large"
             color="error"
+            onClick={() => navigate('/')}
           >
             Cancel
           </Button>
