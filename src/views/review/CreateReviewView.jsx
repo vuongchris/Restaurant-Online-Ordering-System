@@ -9,8 +9,11 @@ import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function CreateReviewView() {
+  const { currentUser } = useAuth();
+
   const [newRating, setRating] = useState(0);
   const [newDescription, setDescription] = useState('');
   const [newItem, setItem] = useState('');
@@ -22,6 +25,7 @@ function CreateReviewView() {
   const handleReviewSubmit = async () => {
     try {
       await addDoc(reviewCollectionRef, {
+        userid: currentUser.uid,
         item: newItem,
         rating: newRating,
         description: newDescription,

@@ -17,12 +17,13 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
 import {
-  collection, deleteDoc, doc, getDocs,
+  collection, deleteDoc, doc, getDocs, query, where,
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { db } from '../../firebase';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -109,6 +110,8 @@ EnhancedTableHead.propTypes = {
 };
 
 function ReviewsView() {
+  const { currentUser } = useAuth();
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
   const [page, setPage] = React.useState(0);
@@ -123,12 +126,19 @@ function ReviewsView() {
     navigate('/createReview');
   };
 
+  const toLogin = async () => {
+    navigate('/login');
+  };
+
   useEffect(() => {
-    const getReviews = async () => {
-      const data = await getDocs(reviewCollectionRef);
-      setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getReviews();
+    if (currentUser != null) {
+      const q = query(reviewCollectionRef, where('userid', '==', currentUser.uid));
+      const getReviews = async () => {
+        const data = await getDocs(q);
+        setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      };
+      getReviews();
+    }
   }, []);
 
   const handleRequestSort = (property) => {
@@ -165,6 +175,73 @@ function ReviewsView() {
     window.location.reload();
   };
 
+  if (currentUser != null) {
+    return (
+      <div>
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <Grid item>
+            <Typography variant="h3">Reviews</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={toCreateReview}>Create Review</Button>
+          </Grid>
+          <Grid item>
+            <Paper>
+              <TableContainer>
+                <Table>
+                  <EnhancedTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                  />
+                  <TableBody>
+                    {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
+                      <TableRow key={row.item}>
+                        <TableCell>
+                          {row.item}
+                        </TableCell>
+                        <TableCell>
+                          {row.rating}
+                        </TableCell>
+                        <TableCell>
+                          {row.description}
+                        </TableCell>
+                        <TableCell>
+                          <Button onClick={() => {
+                            openReview(row.id, row.item, row.rating, row.description);
+                          }}
+                          >
+                            Edit
+                          </Button>
+                          <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={reviews.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Grid
@@ -178,53 +255,10 @@ function ReviewsView() {
           <Typography variant="h3">Reviews</Typography>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={toCreateReview}>Create Review</Button>
+          <Typography variant="p">To view reviews, you need to login</Typography>
         </Grid>
         <Grid item>
-          <Paper>
-            <TableContainer>
-              <Table>
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                  {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow key={row.item}>
-                      <TableCell>
-                        {row.item}
-                      </TableCell>
-                      <TableCell>
-                        {row.rating}
-                      </TableCell>
-                      <TableCell>
-                        {row.description}
-                      </TableCell>
-                      <TableCell>
-                        <Button onClick={() => {
-                          openReview(row.id, row.item, row.rating, row.description);
-                        }}
-                        >
-                          Edit
-                        </Button>
-                        <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={reviews.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+          <Button variant="contained" onClick={toLogin}>Login</Button>
         </Grid>
       </Grid>
     </div>
