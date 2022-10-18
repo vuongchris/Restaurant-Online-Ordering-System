@@ -3,6 +3,7 @@ import { Button, TextField } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
+// 3 function parameters passed from the controller
 function CustomerService({ newCustomerTicket, handleSubmit, loading }) {
   // Redirect the user to another page using this
   const navigate = useNavigate();
