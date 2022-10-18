@@ -1,5 +1,6 @@
 import { addDoc, collection } from 'firebase/firestore';
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { db } from '../../firebase';
 import CustomerService from '../../views/customer_service/CustomerService';
@@ -8,6 +9,7 @@ function CustomerServiceController() {
   const { currentUser } = useAuth();
   const newCustomerTicket = useRef();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // This function submits the customer's query to the database
   const handleSubmit = async (e) => {
@@ -26,6 +28,11 @@ function CustomerServiceController() {
         userid: currentUser.uid,
         customerTicket: newCustomerTicket.current.value,
       });
+
+      alert('Successfully submitted query!');
+
+      // Redirect to homepage after submitting
+      navigate('/');
     } catch (error) {
       console.error('Error, cant create ticket: ', error);
     }

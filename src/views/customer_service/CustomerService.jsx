@@ -34,6 +34,7 @@ function CustomerService({ newCustomerTicket, handleSubmit, loading }) {
             type="submit"
             variant="contained"
             size="large"
+            disabled={loading}
           >
             Submit
           </Button>
@@ -44,7 +45,6 @@ function CustomerService({ newCustomerTicket, handleSubmit, loading }) {
             size="large"
             color="error"
             onClick={() => navigate('/')}
-            disabled={loading}
           >
             Cancel
           </Button>
