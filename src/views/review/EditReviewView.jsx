@@ -10,8 +10,11 @@ import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function EditReviewView() {
+  const { currentUser } = useAuth();
+
   const location = useLocation();
   const [newRating, setRating] = useState(location.state.rating);
   const [newDescription, setDescription] = useState(location.state.description);
@@ -23,6 +26,7 @@ function EditReviewView() {
     try {
       const docRef = doc(db, 'review', location.state.id);
       await updateDoc(docRef, {
+        userid: currentUser.uid,
         item: newItem,
         rating: newRating,
         description: newDescription,
