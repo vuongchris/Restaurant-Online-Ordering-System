@@ -1,5 +1,5 @@
 import { addDoc, collection } from 'firebase/firestore';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { db } from '../../firebase';
 import CustomerService from '../../views/customer_service/CustomerService';
@@ -7,6 +7,7 @@ import CustomerService from '../../views/customer_service/CustomerService';
 function CustomerServiceController() {
   const { currentUser } = useAuth();
   const newCustomerTicket = useRef();
+  const [loading, setLoading] = useState(false);
 
   // This function submits the customer's query to the database
   const handleSubmit = async (e) => {
@@ -14,6 +15,9 @@ function CustomerServiceController() {
 
     // Try-catch block to handle any errors in the Firebase backend
     try {
+      // Disable the submit button to prevent spam
+      setLoading(true);
+
       // Get the collection AKA the "table"
       const customerServiceRef = collection(db, 'customerTicket');
 
@@ -32,6 +36,7 @@ function CustomerServiceController() {
     <CustomerService
       newCustomerTicket={newCustomerTicket}
       handleSubmit={handleSubmit}
+      loading={loading}
     />
   );
 }

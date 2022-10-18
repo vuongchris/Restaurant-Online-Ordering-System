@@ -24,8 +24,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "testci": "CI=true react-scripts test",
-    "test": "react-scripts test",
+    "test": "CI=true react-scripts test --forceExit",
+    "pretest": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --fix --ext .jsx,.js"
   },

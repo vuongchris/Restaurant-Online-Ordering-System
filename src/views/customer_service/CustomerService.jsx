@@ -3,7 +3,7 @@ import { Button, TextField } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-function CustomerService({ newCustomerTicket, handleSubmit }) {
+function CustomerService({ newCustomerTicket, handleSubmit, loading }) {
   // Redirect the user to another page using this
   const navigate = useNavigate();
   return (
@@ -44,6 +44,7 @@ function CustomerService({ newCustomerTicket, handleSubmit }) {
             size="large"
             color="error"
             onClick={() => navigate('/')}
+            disabled={loading}
           >
             Cancel
           </Button>

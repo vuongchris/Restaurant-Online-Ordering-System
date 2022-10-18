@@ -5,16 +5,16 @@ import {
 import { AuthProvider } from './contexts/auth/AuthContext';
 import AccountController from './controllers/account/AccountController';
 import AuthController from './controllers/auth/AuthController';
-import OrderController from './controllers/order/OrderController';
+import CustomerServiceController from './controllers/customer_service/CustomerServiceController';
 import HomeController from './controllers/home/HomeController';
 import InfoDisplayController from './controllers/infoDisplay/InfoDisplayController';
+import LocationController from './controllers/location/LocationController';
 import NotificationController from './controllers/notification/notificationController';
+import OrderController from './controllers/order/OrderController';
 import PaymentController from './controllers/payment/PaymentController';
-import CustomerService from './views/customer_service/CustomerService';
+import ReviewController from './controllers/review/ReviewController';
 import Navbar from './views/navbar/Navbar';
 import SpecialRequest from './views/special_request/SpecialRequest';
-import ReviewController from './controllers/review/ReviewController';
-import LocationController from './controllers/location/LocationController';
 
 function Routes() {
   return (
@@ -33,7 +33,7 @@ function Routes() {
           <Route path="/restaurantList" element={<InfoDisplayController view="restaurantList" />} />
           <Route path="/restaurantDemo" element={<InfoDisplayController view="display" />} />
           <Route path="/notifier" element={<NotificationController />} />
-          <Route path="/customerService" element={<CustomerService />} />
+          <Route path="/customerService" element={<CustomerServiceController />} />
           <Route path="/account" element={<AccountController />} />
           <Route path="/orderHistory" element={<OrderController view="orderHistory" />} />
           <Route path="/createReview" element={<ReviewController view="createReview" />} />

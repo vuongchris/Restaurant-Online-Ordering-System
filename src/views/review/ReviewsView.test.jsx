@@ -1,12 +1,19 @@
-/* eslint-disable no-unused-vars */
-import { render, screen, getDefaultNormalizer } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import * as Auth from '../../contexts/auth/AuthContext';
 import ReviewsView from './ReviewsView';
+
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useEffect: jest.fn(),
+}));
 
 describe('Review View tests', () => {
   it('All items should be present on the page', () => {
     // Arrange
+    const contextValues = { currentUser: { email: 'Test@email.com' } };
+    jest.spyOn(Auth, 'useAuth').mockImplementation(() => contextValues);
 
     // Act
     render(
