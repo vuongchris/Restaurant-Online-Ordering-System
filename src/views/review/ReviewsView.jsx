@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-else-return */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
@@ -122,13 +124,14 @@ function ReviewsView() {
 
   const navigate = useNavigate();
 
+  const getReviews = async () => {
+    const q = query(reviewCollectionRef, where('userid', '==', currentUser.uid));
+    const data = await getDocs(q);
+    setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
   useEffect(() => {
     if (currentUser != null) {
-      const q = query(reviewCollectionRef, where('userid', '==', currentUser.uid));
-      const getReviews = async () => {
-        const data = await getDocs(q);
-        setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      };
       getReviews();
     }
   }, []);
@@ -164,10 +167,100 @@ function ReviewsView() {
     } catch (e) {
       console.error('Error deleting document: ', e);
     }
-    window.location.reload();
+    getReviews();
+    alert('Review successfully deleted!');
   };
 
   if (currentUser != null) {
+    if (reviews.length > 0) {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Reviews</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => navigate('/createReview')}>Create Review</Button>
+            </Grid>
+            <Grid item>
+              <Paper>
+                <TableContainer>
+                  <Table>
+                    <EnhancedTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                      {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
+                        <TableRow key={row.item}>
+                          <TableCell>
+                            {row.item}
+                          </TableCell>
+                          <TableCell>
+                            {row.rating}
+                          </TableCell>
+                          <TableCell>
+                            {row.description}
+                          </TableCell>
+                          <TableCell>
+                            <Button onClick={() => {
+                              openReview(row.id, row.item, row.rating, row.description);
+                            }}
+                            >
+                              Edit
+                            </Button>
+                            <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={reviews.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Paper>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Reviews</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="p">No reviews on this account. To create a review click the button below.</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => navigate('/createReview')}>Create Review</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    }
+  } else {
     return (
       <div>
         <Grid
@@ -181,80 +274,15 @@ function ReviewsView() {
             <Typography variant="h3">Reviews</Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={() => navigate('/createReview')}>Create Review</Button>
+            <Typography variant="p">To create, edit or view reviews, you need to login.</Typography>
           </Grid>
           <Grid item>
-            <Paper>
-              <TableContainer>
-                <Table>
-                  <EnhancedTableHead
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                  />
-                  <TableBody>
-                    {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
-                      <TableRow key={row.item}>
-                        <TableCell>
-                          {row.item}
-                        </TableCell>
-                        <TableCell>
-                          {row.rating}
-                        </TableCell>
-                        <TableCell>
-                          {row.description}
-                        </TableCell>
-                        <TableCell>
-                          <Button onClick={() => {
-                            openReview(row.id, row.item, row.rating, row.description);
-                          }}
-                          >
-                            Edit
-                          </Button>
-                          <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={reviews.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Paper>
+            <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
           </Grid>
         </Grid>
       </div>
     );
   }
-
-  return (
-    <div>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-      >
-        <Grid item>
-          <Typography variant="h3">Reviews</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="p">To create, edit or view reviews, you need to login.</Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
-        </Grid>
-      </Grid>
-    </div>
-  );
 }
 
 export default ReviewsView;

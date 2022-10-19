@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-else-return */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -15,12 +17,15 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import {
-  collection, query, where, getDocs, doc,
+  collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc,
 } from 'firebase/firestore';
 import { useNavigate } from 'react-router';
 import { db } from '../../firebase';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -101,19 +106,27 @@ EnhancedTableHead.propTypes = {
 };
 
 function CartView() {
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('total');
+  const { currentUser } = useAuth();
 
-  const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items', 'cartItems');
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('item');
+
   const [items, setItems] = useState([]);
 
   const navigate = useNavigate();
 
+  const getItems = async () => {
+    const docRef = doc(db, 'user', currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
+    const data = await getDocs(itemsCollectionRef);
+    setItems(data.docs.map((_doc) => ({ ..._doc.data(), id: _doc.id })));
+  };
+
   useEffect(() => {
-    const getItems = async () => {
-      const data = await getDocs(reviewCollectionRef);
-      setItems(data.docs.map((_doc) => ({ ..._doc.data(), id: _doc.id })));
-    };
+    if (currentUser != null) {
+      getItems();
+    }
   }, []);
 
   const handleRequestSort = (event, property) => {
@@ -121,53 +134,137 @@ function CartView() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  return (
-    <div>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-      >
-        <Grid item>
-          <Typography variant="h3">Cart</Typography>
-        </Grid>
 
-        <Grid item>
-          <Paper>
-            <TableContainer>
-              <Table>
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                  {items.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
-                    <TableRow>
-                      <TableCell>
-                        {row.item}
-                      </TableCell>
-                      <TableCell>
-                        {row.quantity}
-                      </TableCell>
-                      <TableCell>
-                        {row.total}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
+  const updateQuantity = async (id, quantity, price) => {
+    const docRef = doc(db, 'user', currentUser.uid);
+    const totalPrice = parseInt(quantity, 10) * parseInt(price, 10);
+    const docSnap = await getDoc(docRef);
+    const itemDoc = doc(db, 'order', docSnap.data().activeOrder, 'items', id);
+    await updateDoc(itemDoc, {
+      quantity: parseInt(quantity, 10),
+      total: totalPrice,
+    });
+    getItems();
+  };
+
+  const deleteItem = async (id) => {
+    const docRef = doc(db, 'user', currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    const itemDoc = doc(db, 'order', docSnap.data().activeOrder, 'items', id);
+    await deleteDoc(itemDoc);
+    getItems();
+    alert('Item successfully deleted');
+  };
+
+  if (currentUser != null) {
+    if (items.length > 0) {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Cart</Typography>
+            </Grid>
+
+            <Grid item>
+              <Paper>
+                <TableContainer>
+                  <Table>
+                    <EnhancedTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                      {items.slice().sort(getComparator(order, orderBy)).slice().map((row) => (
+                        <TableRow>
+                          <TableCell>
+                            {row.item}
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              type="number"
+                              defaultValue={row.quantity}
+                              onChange={(event) => {
+                                updateQuantity(row.id, event.target.value, row.price);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            {row.total}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              color="error"
+                              onClick={() => { deleteItem(row.id); }}
+                            >
+                              <DeleteIcon />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" size="large" onClick={() => navigate('/checkout')}>Checkout</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Cart</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => navigate('/')}>Menu</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    }
+  } else {
+    return (
+      <div>
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <Grid item>
+            <Typography variant="h3">Cart</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="p">You need to login to add items to the cart.</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button variant="contained" size="large" onClick={() => navigate('/checkout')}>Checkout</Button>
-        </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default CartView;

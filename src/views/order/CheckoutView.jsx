@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
@@ -17,12 +18,13 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
 import {
-  collection, addDoc, doc, getDocs, setDoc,
+  collection, addDoc, doc, getDoc, getDocs, setDoc, updateDoc, serverTimestamp,
 } from 'firebase/firestore';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { db } from '../../firebase';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -43,7 +45,6 @@ function getComparator(order, orderBy) {
 const headCells = [
   {
     id: 'item',
-    numeric: false,
     disablePadding: false,
     label: 'Item',
   },
@@ -103,6 +104,8 @@ EnhancedTableHead.propTypes = {
 };
 
 function CheckoutView() {
+  const { currentUser } = useAuth();
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
   const [page, setPage] = useState(0);
@@ -120,17 +123,18 @@ function CheckoutView() {
   const [newDeliveryInstructions, setDeliveryInstructions] = useState('');
   const [newSpecialRequests, setSpecialRequests] = useState('');
 
-  const orderCollectionRef = collection(db, 'order');
-  const [orders, setOrders] = useState([]);
+  const [items, setItems] = useState([]);
 
-  const date = new Date();
+  const docRef = doc(db, 'user', currentUser.uid);
 
   useEffect(() => {
-    const getOrders = async () => {
-      const data = await getDocs(orderCollectionRef);
-      setOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const getItems = async () => {
+      const docSnap = await getDoc(docRef);
+      const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
+      const data = await getDocs(itemsCollectionRef);
+      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
-    getOrders();
+    getItems();
   }, []);
 
   const navigate = useNavigate();
@@ -152,8 +156,11 @@ function CheckoutView() {
 
   const handleOrderSubmit = async () => {
     try {
-      await setDoc(doc(db, 'order', `${orders.length + 1}`), {
-        order: orders.length + 1,
+      const docSnap = await getDoc(docRef);
+      const orderDoc = doc(db, 'order', docSnap.data().activeOrder);
+      await updateDoc(orderDoc, {
+        userid: currentUser.uid,
+        email: currentUser.email,
         firstName: newFirstName,
         lastName: newLastName,
         address: {
@@ -168,7 +175,9 @@ function CheckoutView() {
         deliveryInstructions: newDeliveryInstructions,
         specialRequests: newSpecialRequests,
         status: 'Preparing',
+        timestamp: serverTimestamp(),
       });
+      alert('Order successfully placed.');
       navigate('/');
       console.log('Document created!');
     } catch (e) {
@@ -320,16 +329,16 @@ function CheckoutView() {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {orders.slice().sort(getComparator(order, orderBy)).map((row) => (
+                  {items.slice().sort(getComparator(order, orderBy)).map((row) => (
                     <TableRow key={row.description}>
                       <TableCell>
                         {row.item}
                       </TableCell>
                       <TableCell>
-                        {row.rating}
+                        {row.quantity}
                       </TableCell>
                       <TableCell>
-                        {row.description}
+                        {row.total}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -339,7 +348,7 @@ function CheckoutView() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={orders.length}
+              count={items.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -356,7 +365,10 @@ function CheckoutView() {
         spacing={1}
       >
         <Grid item>
-          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Submit</Button>
+          <Button variant="contained" size="large" onClick={() => navigate('/cart')}>Return to Cart</Button>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Submit Order</Button>
         </Grid>
       </Grid>
     </div>
