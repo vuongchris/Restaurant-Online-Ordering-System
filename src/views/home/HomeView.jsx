@@ -34,6 +34,8 @@ function HomeView() {
       <br />
       <Link to="restaurantList">Restaurant List</Link>
       <br />
+      <Link to="restaurantMenu">Menu List [TEMPORARY FOR DEBUGGING]</Link>
+      <br />
       <Link to="notifier">Notification</Link>
       <br />
       <Link to="customerService">CUSTOMER SERVICE</Link>
