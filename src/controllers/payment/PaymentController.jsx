@@ -1,14 +1,19 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable no-alert */
-import { Timestamp } from 'firebase/firestore';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import {
+  doc, getDoc, updateDoc, serverTimestamp, Timestamp,
+} from 'firebase/firestore';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { savePaymentDetails } from '../../services/payment/PaymentService';
+import { db } from '../../firebase';
 import PaymentView from '../../views/payment/PaymentView';
 
 function PaymentController() {
   const { currentUser } = useAuth();
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -19,6 +24,23 @@ function PaymentController() {
     expiryRef: useRef(),
     cvvRef: useRef(),
     saveDetailsRef: useRef(),
+  };
+
+  const updateOrderPayment = async () => {
+    const docRef = doc(db, 'user', currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    const orderDoc = doc(db, 'order', docSnap.data().activeOrder);
+    await updateDoc(orderDoc, {
+      payment: {
+        cardName: refs.cardNameRef.current.value,
+        cardNumber: refs.cardNumberRef.current.value,
+        expiry: Timestamp.fromDate(new Date(refs.expiryRef.current.value)),
+        cvv: refs.cvvRef.current.value,
+        isSaved: refs.saveDetailsRef.current.checked,
+      },
+      status: 'Submitted',
+      timestamp: serverTimestamp(),
+    });
   };
 
   // Save and submit payment
@@ -38,7 +60,10 @@ function PaymentController() {
     // Try-catch to handle errors during Firebase save process
     try {
       setLoading(true);
-      await savePaymentDetails(data);
+      await updateOrderPayment();
+      if (refs.saveDetailsRef.current.checked) {
+        await savePaymentDetails(data);
+      }
       alert('Successfully saved payment details!');
       navigate('/');
     } catch (error) {

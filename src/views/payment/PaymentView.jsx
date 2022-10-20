@@ -2,7 +2,6 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Link } from 'react-router-dom';
 
 function PaymentView({ refs, submitPayment, loading }) {
   return (
@@ -72,20 +71,6 @@ function PaymentView({ refs, submitPayment, loading }) {
             disabled={loading}
           >
             Submit
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            size="large"
-            color="error"
-          >
-            <Link
-              to="/"
-              style={{ textDecoration: 'none', color: 'white' }}
-            >
-              Cancel
-            </Link>
           </Button>
         </Grid>
       </Grid>
