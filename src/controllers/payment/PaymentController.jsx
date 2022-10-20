@@ -41,6 +41,9 @@ function PaymentController() {
       status: 'Submitted',
       timestamp: serverTimestamp(),
     });
+    await updateDoc(docRef, {
+      activeOrder: 'N/A',
+    });
   };
 
   // Save and submit payment

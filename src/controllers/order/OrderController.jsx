@@ -108,12 +108,48 @@ function OrderController({ view }) {
     }
   };
 
+  const addOrder = async () => {
+    const orderCollectionRef = collection(db, 'order');
+    const newOrderDoc = await addDoc(orderCollectionRef, {
+      userid: currentUser.uid,
+      email: currentUser.email,
+    });
+    await updateDoc(docRef, {
+      activeOrder: newOrderDoc.id,
+    });
+  };
+
+  const addItem = async () => {
+    let docSnap = await getDoc(docRef);
+    if (docSnap.data().activeOrder === 'N/A') {
+      const orderCollectionRef = collection(db, 'order');
+      const newOrderDoc = await addDoc(orderCollectionRef, {
+        userid: currentUser.uid,
+        email: currentUser.email,
+      });
+      await updateDoc(docRef, {
+        activeOrder: newOrderDoc.id,
+      });
+    }
+    docSnap = await getDoc(docRef);
+    const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
+    await addDoc(itemsCollectionRef, {
+      item: 'Chocolate Sundae',
+      quantity: 1,
+      price: 3,
+      total: 3,
+    });
+    getItems();
+  };
+
   const orderViews = {
     cart: <CartView
       items={items}
       updateQuantity={updateQuantity}
       deleteItem={deleteItem}
       toCheckout={toCheckout}
+      addOrder={addOrder}
+      addItem={addItem}
     />,
     checkout: <CheckoutView
       refs={refs}
