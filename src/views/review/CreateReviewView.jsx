@@ -1,41 +1,17 @@
+/* eslint-disable no-unused-vars */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../../firebase';
-import { useAuth } from '../../contexts/auth/AuthContext';
 
-function CreateReviewView() {
-  const { currentUser } = useAuth();
-
+function CreateReviewView({ toReviews, handleCreateReview }) {
   const [newRating, setRating] = useState(0);
   const [newDescription, setDescription] = useState('');
   const [newItem, setItem] = useState('');
-
-  const reviewCollectionRef = collection(db, 'review');
-
-  const navigate = useNavigate();
-
-  const handleReviewSubmit = async () => {
-    try {
-      await addDoc(reviewCollectionRef, {
-        userid: currentUser.uid,
-        item: newItem,
-        rating: newRating,
-        description: newDescription,
-      });
-      navigate('/reviews');
-      console.log('Document created!');
-    } catch (e) {
-      console.error('Error adding document: ', e);
-    }
-  };
 
   return (
     <div>
@@ -81,7 +57,7 @@ function CreateReviewView() {
           <Button
             variant="contained"
             size="large"
-            onClick={handleReviewSubmit}
+            onClick={() => { handleCreateReview(newItem, newRating, newDescription); }}
           >
             Submit
           </Button>
@@ -91,7 +67,7 @@ function CreateReviewView() {
             variant="contained"
             size="large"
             color="error"
-            onClick={() => navigate('/reviews')}
+            onClick={() => { toReviews(); }}
           >
             Cancel
 

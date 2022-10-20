@@ -1,9 +1,9 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
 /* eslint-disable no-else-return */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -20,11 +20,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-import {
-  collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc,
-} from 'firebase/firestore';
 import { useNavigate } from 'react-router';
-import { db } from '../../firebase';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
@@ -105,55 +101,20 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function CartView() {
+function CartView({
+  items, updateQuantity, deleteItem, toCheckout,
+}) {
   const { currentUser } = useAuth();
 
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('item');
 
-  const [items, setItems] = useState([]);
-
   const navigate = useNavigate();
-
-  const getItems = async () => {
-    const docRef = doc(db, 'user', currentUser.uid);
-    const docSnap = await getDoc(docRef);
-    const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
-    const data = await getDocs(itemsCollectionRef);
-    setItems(data.docs.map((_doc) => ({ ..._doc.data(), id: _doc.id })));
-  };
-
-  useEffect(() => {
-    if (currentUser != null) {
-      getItems();
-    }
-  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const updateQuantity = async (id, quantity, price) => {
-    const docRef = doc(db, 'user', currentUser.uid);
-    const totalPrice = parseInt(quantity, 10) * parseInt(price, 10);
-    const docSnap = await getDoc(docRef);
-    const itemDoc = doc(db, 'order', docSnap.data().activeOrder, 'items', id);
-    await updateDoc(itemDoc, {
-      quantity: parseInt(quantity, 10),
-      total: totalPrice,
-    });
-    getItems();
-  };
-
-  const deleteItem = async (id) => {
-    const docRef = doc(db, 'user', currentUser.uid);
-    const docSnap = await getDoc(docRef);
-    const itemDoc = doc(db, 'order', docSnap.data().activeOrder, 'items', id);
-    await deleteDoc(itemDoc);
-    getItems();
-    alert('Item successfully deleted');
   };
 
   if (currentUser != null) {
@@ -214,7 +175,7 @@ function CartView() {
               </Paper>
             </Grid>
             <Grid item>
-              <Button variant="contained" size="large" onClick={() => navigate('/checkout')}>Checkout</Button>
+              <Button variant="contained" size="large" onClick={() => { toCheckout(); }}>Checkout</Button>
             </Grid>
           </Grid>
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable no-shadow */
@@ -17,14 +18,9 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
-import {
-  collection, addDoc, doc, getDoc, getDocs, setDoc, updateDoc, serverTimestamp,
-} from 'firebase/firestore';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { db } from '../../firebase';
-import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -103,39 +99,11 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function CheckoutView() {
-  const { currentUser } = useAuth();
-
+function CheckoutView({ refs, items, handleOrderSubmit }) {
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('total');
+  const [orderBy, setOrderBy] = useState('item');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const [newFirstName, setFirstName] = useState('');
-  const [newLastName, setLastName] = useState('');
-  const [newAddressLineOne, setAddressLineOne] = useState('');
-  const [newAddressLineTwo, setAddressLineTwo] = useState('');
-  const [newCity, setCity] = useState('');
-  const [newState, setState] = useState('');
-  const [newCountry, setCountry] = useState('');
-  const [newPostcode, setPostcode] = useState('');
-  const [newPhoneNumber, setPhoneNumber] = useState('');
-  const [newDeliveryInstructions, setDeliveryInstructions] = useState('');
-  const [newSpecialRequests, setSpecialRequests] = useState('');
-
-  const [items, setItems] = useState([]);
-
-  const docRef = doc(db, 'user', currentUser.uid);
-
-  useEffect(() => {
-    const getItems = async () => {
-      const docSnap = await getDoc(docRef);
-      const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
-      const data = await getDocs(itemsCollectionRef);
-      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getItems();
-  }, []);
 
   const navigate = useNavigate();
 
@@ -152,37 +120,6 @@ function CheckoutView() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleOrderSubmit = async () => {
-    try {
-      const docSnap = await getDoc(docRef);
-      const orderDoc = doc(db, 'order', docSnap.data().activeOrder);
-      await updateDoc(orderDoc, {
-        userid: currentUser.uid,
-        email: currentUser.email,
-        firstName: newFirstName,
-        lastName: newLastName,
-        address: {
-          addressLineOne: newAddressLineOne,
-          addressLineTwo: newAddressLineTwo,
-          city: newCity,
-          state: newState,
-          country: newCountry,
-          postcode: newPostcode,
-        },
-        phoneNumber: newPhoneNumber,
-        deliveryInstructions: newDeliveryInstructions,
-        specialRequests: newSpecialRequests,
-        status: 'Preparing',
-        timestamp: serverTimestamp(),
-      });
-      alert('Order successfully placed.');
-      navigate('/');
-      console.log('Document created!');
-    } catch (e) {
-      console.error('Error adding document: ', e);
-    }
   };
 
   return (
@@ -210,75 +147,57 @@ function CheckoutView() {
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="First Name"
-                onChange={(event) => {
-                  setFirstName(event.target.value);
-                }}
+                inputRef={refs.firstNameRef}
               />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Last Name"
-                onChange={(event) => {
-                  setLastName(event.target.value);
-                }}
+                inputRef={refs.lastNameRef}
               />
               <br />
               <br />
               <TextField
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Address Line 1"
-                onChange={(event) => {
-                  setAddressLineOne(event.target.value);
-                }}
+                inputRef={refs.addressLineOneRef}
               />
               <br />
               <br />
               <TextField
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Address Line 2"
-                onChange={(event) => {
-                  setAddressLineTwo(event.target.value);
-                }}
+                inputRef={refs.addressLineTwoRef}
               />
               <br />
               <br />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="City"
-                onChange={(event) => {
-                  setCity(event.target.value);
-                }}
+                inputRef={refs.cityRef}
               />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="State"
-                onChange={(event) => {
-                  setState(event.target.value);
-                }}
+                inputRef={refs.stateRef}
               />
               <br />
               <br />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Country"
-                onChange={(event) => {
-                  setCountry(event.target.value);
-                }}
+                inputRef={refs.countryRef}
               />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Postcode"
-                onChange={(event) => {
-                  setPostcode(event.target.value);
-                }}
+                inputRef={refs.postcodeRef}
               />
               <br />
               <br />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Phone Number"
-                onChange={(event) => {
-                  setPhoneNumber(event.target.value);
-                }}
+                inputRef={refs.phoneNumberRef}
               />
             </Grid>
           </Grid>
@@ -294,9 +213,7 @@ function CheckoutView() {
                 multiline
                 minRows={5}
                 maxRows={20}
-                onChange={(event) => {
-                  setDeliveryInstructions(event.target.value);
-                }}
+                inputRef={refs.deliveryInstructionsRef}
               />
             </Grid>
           </Grid>
@@ -312,9 +229,7 @@ function CheckoutView() {
                 multiline
                 minRows={5}
                 maxRows={20}
-                onChange={(event) => {
-                  setSpecialRequests(event.target.value);
-                }}
+                inputRef={refs.specialRequestsRef}
               />
             </Grid>
           </Grid>
@@ -368,7 +283,7 @@ function CheckoutView() {
           <Button variant="contained" size="large" onClick={() => navigate('/cart')}>Return to Cart</Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Submit Order</Button>
+          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Proceed to Payment</Button>
         </Grid>
       </Grid>
     </div>

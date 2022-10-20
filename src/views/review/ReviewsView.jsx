@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-alert */
 /* eslint-disable no-else-return */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
@@ -18,13 +19,9 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
-import {
-  collection, deleteDoc, doc, getDocs, query, where,
-} from 'firebase/firestore';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { db } from '../../firebase';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
@@ -111,7 +108,7 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function ReviewsView() {
+function ReviewsView({ reviews, openReview, deleteReview }) {
   const { currentUser } = useAuth();
 
   const [order, setOrder] = useState('asc');
@@ -119,22 +116,7 @@ function ReviewsView() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const reviewCollectionRef = collection(db, 'review');
-  const [reviews, setReviews] = useState([]);
-
   const navigate = useNavigate();
-
-  const getReviews = async () => {
-    const q = query(reviewCollectionRef, where('userid', '==', currentUser.uid));
-    const data = await getDocs(q);
-    setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  };
-
-  useEffect(() => {
-    if (currentUser != null) {
-      getReviews();
-    }
-  }, []);
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -149,26 +131,6 @@ function ReviewsView() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const openReview = async (reviewId, reviewItem, reviewRating, reviewDescription) => {
-    navigate('/editReview', {
-      state: {
-        id: reviewId, item: reviewItem, rating: reviewRating, description: reviewDescription,
-      },
-    });
-  };
-
-  const deleteReview = async (id) => {
-    try {
-      const reviewDoc = doc(db, 'review', id);
-      await deleteDoc(reviewDoc);
-      console.log('Document deleted!');
-    } catch (e) {
-      console.error('Error deleting document: ', e);
-    }
-    getReviews();
-    alert('Review successfully deleted!');
   };
 
   if (currentUser != null) {

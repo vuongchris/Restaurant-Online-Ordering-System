@@ -1,46 +1,20 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import { updateDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase';
-import { useAuth } from '../../contexts/auth/AuthContext';
 
-function EditReviewView() {
-  const { currentUser } = useAuth();
-
+function EditReviewView({ toReviews, handleUpdateReview }) {
   const location = useLocation();
   const [newRating, setRating] = useState(location.state.rating);
   const [newDescription, setDescription] = useState(location.state.description);
   const [newItem, setItem] = useState(location.state.item);
-
-  const navigate = useNavigate();
-
-  const handleReviewSubmit = async () => {
-    try {
-      const docRef = doc(db, 'review', location.state.id);
-      await updateDoc(docRef, {
-        userid: currentUser.uid,
-        item: newItem,
-        rating: newRating,
-        description: newDescription,
-      });
-      navigate('/reviews');
-      console.log('Document created!');
-    } catch (e) {
-      console.error('Error adding document: ', e);
-    }
-  };
-
-  const toReviews = async () => {
-    navigate('/reviews');
-  };
 
   return (
     <div>
@@ -89,7 +63,9 @@ function EditReviewView() {
           <Button
             variant="contained"
             size="large"
-            onClick={handleReviewSubmit}
+            onClick={() => {
+              handleUpdateReview(location.state.id, newItem, newRating, newDescription);
+            }}
           >
             Submit
           </Button>
