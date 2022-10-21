@@ -29,6 +29,7 @@ function InfoDisplayView({
               <th>Allow Pickups?</th>
               <th>Delete Branch</th>
               <th>Update Branch</th>
+              <th>Select Restaurant</th>
             </tr>
 
             {infoDisplay.map((restaurant) => (
@@ -41,6 +42,7 @@ function InfoDisplayView({
                 <td>{restaurant.pickUp}</td>
                 <td><button type="submit" onClick={() => { deleteBranch(restaurant.id); }}>Delete Branch</button></td>
                 <td><button type="submit" onClick={() => { updateRestaurant(); }}>Update Branch</button></td>
+                <td><button type="submit" onClick={() => { updateRestaurant(); }}>Select Restaurant</button></td>
               </tr>
             ))}
           </tbody>

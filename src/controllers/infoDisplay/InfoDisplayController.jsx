@@ -4,7 +4,9 @@ import {
   collection, getDocs, addDoc, deleteDoc, setDoc, query, where, updateDoc, doc,
 } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import InfoDisplayView from '../../views/infoDisplay/InfoDisplayView';
+import InfoDisplayUpdate from '../../views/infoDisplay/infoDisplayUpdate';
 import { db } from '../../firebase';
 
 function InfoDisplayController({ view }) {
@@ -17,6 +19,7 @@ function InfoDisplayController({ view }) {
 
   const [infoDisplay, setInfoDisplays] = useState([]);
   const infoDisplayCollection = collection(db, 'restaurant');
+  const navigation = useNavigate();
 
   const addRestaurant = async () => {
     await addDoc(infoDisplayCollection, {
@@ -29,6 +32,7 @@ function InfoDisplayController({ view }) {
   };
 
   const updateRestaurant = async () => {
+    navigation('/restaurantListEdit');
     const q = query(collection(db, 'restaurant'), where('restaurantBranch', '==', newRestaurant));
     // basically gets a query going for specifically restaurant docs
     const querySnapshot = await getDocs(q);
@@ -44,6 +48,19 @@ function InfoDisplayController({ view }) {
       });
     });
   };
+
+  /*
+  const updateRestaurant = async (id, restaurantBranch, location) => {
+    const RestaurantUpdate = doc(db, 'restaurant', id);
+    const restaurantName = restaurantBranch;
+    const restaurantlocation = location;
+    await updateDoc(RestaurantUpdate, {
+      restaurantBranch: restaurantName,
+      location: restaurantlocation,
+    });
+    navigation('/restaurantListEdit');
+  };
+  */
 
   const deleteBranch = async (id) => {
     const restaurantDoc = doc(db, 'restaurant', id);
@@ -85,8 +102,9 @@ function InfoDisplayController({ view }) {
   // };
 
   // return testViews[view];
-  return (
-    <InfoDisplayView
+
+  const DisplayView = {
+    display: <InfoDisplayView
       infoDisplay={infoDisplay}
       addRestaurant={addRestaurant}
       setNewRestaurant={setNewRestaurant}
@@ -96,7 +114,14 @@ function InfoDisplayController({ view }) {
       setNewPickUp={setNewPickUp}
       deleteBranch={deleteBranch}
       updateRestaurant={updateRestaurant}
-    />
+    />,
+    update: <InfoDisplayUpdate
+      infoDisplay={infoDisplay}
+    />,
+  };
+
+  return (
+    DisplayView[view]
   );
 }
 
