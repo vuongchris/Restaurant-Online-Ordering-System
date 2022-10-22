@@ -4,7 +4,11 @@ import './Notification.css';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import notificationController from '../../controllers/notification/notificationController';
 
-function NotificationView({ sendEmail }) {
+function NotificationView({
+  sendEmail,
+  orderNum,
+  randomizeOrderNum,
+}) {
   return (
     <div>
       <div className="container">
@@ -23,7 +27,10 @@ function NotificationView({ sendEmail }) {
               <textarea className="form-control" id="" cols="30" rows="8" placeholder="Your message" name="message" />
             </div>
             <div className="col-8 pt-3 mx-auto">
-              <input type="submit" className="btn btn-info" value="Send Message" />
+              <input type="submit" onClick={randomizeOrderNum} className="btn btn-info" value="Send Message" />
+            </div>
+            <div className="col-8 form-group pt-2 mx-auto">
+              <input type="hidden" className="form-control" value={orderNum} name="contact_number" />
             </div>
           </div>
         </form>
