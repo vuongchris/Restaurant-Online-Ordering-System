@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import { useNavigate } from 'react-router';
 import './table.css';
-// import createRestaurant from '../../controllers/infoDisplay/InfoDisplayController';
-// import '../../controllers/infoDisplay/InfoDisplayController';
 
 function InfoDisplayView({
   infoDisplay,
@@ -15,6 +14,7 @@ function InfoDisplayView({
   deleteBranch,
   updateRestaurant,
 }) {
+  const navigation = useNavigate();
   return (
     <>
       <div>
@@ -41,7 +41,7 @@ function InfoDisplayView({
                 <td>{restaurant.Hours}</td>
                 <td>{restaurant.pickUp}</td>
                 <td><button type="submit" onClick={() => { deleteBranch(restaurant.id); }}>Delete Branch</button></td>
-                <td><button type="submit" onClick={() => { updateRestaurant(); }}>Update Branch</button></td>
+                <td><button type="submit" onClick={() => navigation(`/restaurantListEdit/${restaurant.id}`)}>Update Branch</button></td>
                 <td><button type="submit" onClick={() => { updateRestaurant(); }}>Select Restaurant</button></td>
               </tr>
             ))}
