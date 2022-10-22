@@ -1,18 +1,20 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import './Notification.css';
+import { Button, Grid } from '@mui/material';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import notificationController from '../../controllers/notification/notificationController';
 
 function NotificationView({
-  sendEmail,
+  sendOrderEmail,
   orderNum,
   randomizeOrderNum,
+  changeToUpdateView,
 }) {
   return (
     <div>
       <div className="container">
-        <form onSubmit={sendEmail}>
+        <form onSubmit={sendOrderEmail}>
           <div className="row pt-5 mx-auto">
             <div className="col-8 form-group mx-auto">
               <input type="text" className="form-control" placeholder="Name" name="name" />
@@ -35,7 +37,25 @@ function NotificationView({
           </div>
         </form>
       </div>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
+      >
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => { changeToUpdateView(); }}
+          >
+            Go to Notification Update
+          </Button>
+        </Grid>
+      </Grid>
     </div>
+
   );
 }
 

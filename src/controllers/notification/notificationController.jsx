@@ -2,11 +2,14 @@
 /* eslint-disable no-console */
 import { React, useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { useNavigate } from 'react-router';
 import NotificationView from '../../views/notification/notificationView';
+import NotificationUpdater from '../../views/notification/notificationUpdater';
 
-function NotificationController() {
+function NotificationController({ view }) {
   // const form = useRef();
   const [orderNum, setOrderNum] = useState(0);
+  const navigate = useNavigate();
 
   // generate a five digit number for the contact_number variable
   function randomNumberInRange(min, max) {
@@ -19,7 +22,7 @@ function NotificationController() {
     setOrderNum(randomNumberInRange(1, 100000));
   };
 
-  const sendEmail = (e) => {
+  const sendOrderEmail = (e) => {
     e.preventDefault();
 
     emailjs.sendForm('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
@@ -31,12 +34,36 @@ function NotificationController() {
     e.target.reset();
   };
 
-  return (
-    <NotificationView
-      sendEmail={sendEmail}
+  const sendAccountEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
+      .then((result) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text);
+      });
+    e.target.reset();
+  };
+
+  const changeToUpdateView = () => {
+    navigate('/notifierUpdate');
+  };
+
+  const NotifierView = {
+    order: <NotificationView
+      sendOrderEmail={sendOrderEmail}
       orderNum={orderNum}
       randomizeOrderNum={randomizeOrderNum}
-    />
+      changeToUpdateView={changeToUpdateView}
+    />,
+    update: <NotificationUpdater
+      sendAccountEmail={sendAccountEmail}
+    />,
+  };
+
+  return (
+    NotifierView[view]
   );
 }
 

@@ -34,7 +34,8 @@ function Routes() {
           <Route path="/restaurantList" element={<InfoDisplayController view="display" />} />
           <Route path="/restaurantMenu" element={<RestaurantMenuController view="restaurantMenu" />} />
           <Route path="/restaurantListEdit" element={<InfoDisplayController view="update" />} />
-          <Route path="/notifier" element={<NotificationController />} />
+          <Route path="/notifier" element={<NotificationController view="order" />} />
+          <Route path="/notifierUpdate" element={<NotificationController view="update" />} />
           <Route path="/customerService" element={<CustomerServiceController />} />
           <Route path="/account" element={<AccountController />} />
           <Route path="/orderHistory" element={<OrderController view="orderHistory" />} />
