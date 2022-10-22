@@ -33,7 +33,7 @@ function Routes() {
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="display" />} />
           <Route path="/restaurantMenu" element={<RestaurantMenuController view="restaurantMenu" />} />
-          <Route path="/restaurantListEdit" element={<InfoDisplayController view="update" />} />
+          <Route path="/restaurantListEdit/:restaurantId" element={<InfoDisplayController view="update" />} />
           <Route path="/notifier" element={<NotificationController />} />
           <Route path="/customerService" element={<CustomerServiceController />} />
           <Route path="/account" element={<AccountController />} />

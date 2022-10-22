@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
-// import { Link } from 'react-router-dom';
 
 function InfoDisplayUpdate({
-  infoDisplay,
+  infoDisplay: restaurant, updateRestaurant, setNewRestaurant, setNewLocation,
 }) {
   return (
     <>
@@ -16,14 +15,10 @@ function InfoDisplayUpdate({
               <th>Restaurant Name</th>
               <th>Location</th>
             </tr>
-
-            {infoDisplay.map((restaurant) => (
-
-              <tr key={restaurant.Location}>
-                <td>{restaurant.restaurantBranch}</td>
-                <td>{restaurant.Location}</td>
-              </tr>
-            ))}
+            <tr>
+              <td>{restaurant.restaurantBranch}</td>
+              <td>{restaurant.Location}</td>
+            </tr>
           </tbody>
         </table>
 
@@ -39,29 +34,32 @@ function InfoDisplayUpdate({
           <Grid item>
             <h1>Update the Restaurant Info</h1>
           </Grid>
-          <Grid item>
-            <input readOnly value={document.id} />
-          </Grid>
+          <h3>
+            Restaurant ID:
+            {' '}
+            {restaurant.id}
+          </h3>
           <Grid item>
             <TextField
               label="Restaurant Name"
               required
+              onChange={(event) => setNewRestaurant(event.target.value)}
             />
           </Grid>
           <Grid item>
             <TextField
               label="Restaurant Location"
               required
+              onChange={(event) => setNewLocation(event.target.value)}
             />
           </Grid>
           <Grid item>
             <Button
-              type="submit"
               variant="contained"
               size="large"
+              onClick={updateRestaurant}
             >
               Submit Changes
-
             </Button>
           </Grid>
         </Grid>
