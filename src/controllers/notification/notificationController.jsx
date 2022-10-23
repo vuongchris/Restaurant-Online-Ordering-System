@@ -37,7 +37,7 @@ function NotificationController({ view }) {
   const sendAccountEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
+    emailjs.sendForm('service_m9xlrha', 'account_form', e.target, 'gxDx8TedOJG-NvjPo')
       .then((result) => {
         console.log(result.text);
       }, (error) => {
@@ -68,3 +68,16 @@ function NotificationController({ view }) {
 }
 
 export default NotificationController;
+
+// Exported Lite Version for use on other pages.
+export const sendFullOrderEmail = (e) => {
+  e.preventDefault();
+
+  emailjs.sendForm('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
+    .then((result) => {
+      console.log(result.text);
+    }, (error) => {
+      console.log(error.text);
+    });
+  e.target.reset();
+};

@@ -16,6 +16,7 @@ import PaymentController from './controllers/payment/PaymentController';
 import ReviewController from './controllers/review/ReviewController';
 import Navbar from './views/navbar/Navbar';
 import SpecialRequest from './views/special_request/SpecialRequest';
+import NotifTest from './views/notification/notifTest';
 
 function Routes() {
   return (
@@ -37,6 +38,7 @@ function Routes() {
           <Route path="/restaurantListEdit/:restaurantId" element={<InfoDisplayController view="update" />} />
           <Route path="/notifier" element={<NotificationController view="order" />} />
           <Route path="/notifierUpdate" element={<NotificationController view="update" />} />
+          <Route path="/notifTest" element={<NotifTest />} />
           <Route path="/customerService" element={<CustomerServiceController />} />
           <Route path="/account" element={<AccountController />} />
           <Route path="/orderHistory" element={<OrderController view="orderHistory" />} />

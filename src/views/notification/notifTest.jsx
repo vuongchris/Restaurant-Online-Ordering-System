@@ -1,17 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import './Notification.css';
 import { Button, Grid, TextField } from '@mui/material';
+import { sendFullOrderEmail } from '../../controllers/notification/notificationController';
 
-function NotificationView({
-  sendOrderEmail,
-  orderNum,
-  randomizeOrderNum,
-  changeToUpdateView,
-}) {
+// This is purely for testing functionality without changing other existing page function.
+function NotifTest() {
   return (
     <div>
-      <form onSubmit={sendOrderEmail}>
+      <form onSubmit={sendFullOrderEmail}>
         <Grid
           container
           direction="column"
@@ -73,7 +69,6 @@ function NotificationView({
               type="submit"
               variant="contained"
               size="large"
-              onClick={randomizeOrderNum}
               value="Send Message"
             >
               Submit Order Details
@@ -82,37 +77,13 @@ function NotificationView({
           </Grid>
 
           <div className="col-8 form-group pt-2 mx-auto">
-            <input type="hidden" className="form-control" value={orderNum} name="contact_number" />
+            <input type="hidden" className="form-control" value={Math.floor(Math.random() * (10000 - 1) + 1)} name="contact_number" />
           </div>
 
         </Grid>
       </form>
-
-      <Grid
-        // This is for a separate function to direct you to the account notification page.
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={8}
-      >
-        <Grid item>
-          <h1> </h1>
-        </Grid>
-
-        <Grid item>
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={() => { changeToUpdateView(); }}
-          >
-            Go to Notification Update
-          </Button>
-        </Grid>
-      </Grid>
     </div>
-
   );
 }
 
-export default NotificationView;
+export default NotifTest;
