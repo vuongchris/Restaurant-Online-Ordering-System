@@ -17,7 +17,7 @@ function RestaurantMenuController({ view }) {
 
   const [restaurantMenu, setRestaurantMenu] = useState([]);
   const menuCollectionRef = collection(db, 'menu');
-  const RestaurantName = useParams();
+  const { RestaurantName } = useParams();
 
   const addRestaurantMenu = async () => {
     await addDoc(menuCollectionRef, {
