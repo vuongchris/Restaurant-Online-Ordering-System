@@ -4,6 +4,7 @@ import './table.css';
 
 // Similar function to infoDisplayView but with additional information from the restaurant.
 function RestaurantMenuView({
+  restaurantName,
   restaurantMenu,
   addRestaurantMenu,
   setNewMenuName,
@@ -21,6 +22,7 @@ function RestaurantMenuView({
           <tbody>
             <tr>
               <th>Restaurant Name</th>
+              <th>{restaurantName}</th>
             </tr>
             <tr>
               <th>Menu List</th>

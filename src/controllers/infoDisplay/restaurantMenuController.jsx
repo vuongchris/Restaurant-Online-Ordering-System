@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
-  collection, getDocs, addDoc, deleteDoc, setDoc, query, where, updateDoc, doc,
+  collection, getDoc, addDoc, deleteDoc, getDocs, updateDoc, doc,
 } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
 import RestaurantMenuView from '../../views/infoDisplay/restaurantMenuView';
 import { db } from '../../firebase';
 
-function RestaurantMenuController() {
+function RestaurantMenuController({ view }) {
   // Add the Create function into the controller
   const [newMenuName, setNewMenuName] = useState('');
   const [newMenuCategory, setNewMenuCategory] = useState('');
@@ -16,6 +17,7 @@ function RestaurantMenuController() {
 
   const [restaurantMenu, setRestaurantMenu] = useState([]);
   const menuCollectionRef = collection(db, 'menu');
+  const RestaurantName = useParams();
 
   const addRestaurantMenu = async () => {
     await addDoc(menuCollectionRef, {
@@ -27,19 +29,12 @@ function RestaurantMenuController() {
   };
 
   const updateMenu = async () => {
-    const q = query(collection(db, 'menu'), where('name', '==', newMenuName));
-    // basically gets a query going for specifically restaurant docs
-    const querySnapshot = await getDocs(q);
-    let id = '';
-    querySnapshot.forEach(async (document) => {
-      // this line will get the document id of the restaurant
-      id = document.id;
-      const getMenu = doc(db, 'menu', id);
-      // Set the updated document
-      await updateDoc(getMenu, {
-        name: newMenuName,
-        price: newMenuPrice,
-      });
+    const restaurantRef = doc(db, 'menu', RestaurantName);
+    await updateDoc(restaurantRef, {
+      name: newMenuName,
+      category: newMenuCategory,
+      description: newMenuDescription,
+      price: newMenuPrice,
     });
   };
 
@@ -48,20 +43,32 @@ function RestaurantMenuController() {
     await deleteDoc(restaurantMenuDoc);
   };
 
-  useEffect(() => {
-    const getRestaurantMenu = async () => {
+  const getRestaurantMenu = async () => {
+    if (RestaurantName && view === 'Menu1') {
+      // const docRef = doc(db, 'restaurant', RestaurantName);
+      // const restaurant = await getDoc(docRef);
+      const data = await getDocs(menuCollectionRef);
+      // setRestaurantName({ id: restaurant.id, ...restaurant.data() });
+      setRestaurantMenu(await Promise.all(
+        (data.docs.map((document) => ({ ...document.data(), id: document.id }))
+        ),
+      ));
+    } else {
       const data = await getDocs(menuCollectionRef);
       setRestaurantMenu(await Promise.all(
         (data.docs.map((document) => ({ ...document.data(), id: document.id }))
         ),
       ));
-    };
+    }
+  };
 
+  useEffect(() => {
     getRestaurantMenu();
   }, []);
 
-  return (
-    <RestaurantMenuView
+  const RestaurantView = {
+    Menu1: <RestaurantMenuView
+      RestaurantName={RestaurantName}
       restaurantMenu={restaurantMenu}
       addRestaurantMenu={addRestaurantMenu}
       setNewMenuName={setNewMenuName}
@@ -70,7 +77,21 @@ function RestaurantMenuController() {
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
       updateMenu={updateMenu}
-    />
+    />,
+    menu: <RestaurantMenuView
+      restaurantMenu={restaurantMenu}
+      addRestaurantMenu={addRestaurantMenu}
+      setNewMenuName={setNewMenuName}
+      setNewMenuCategory={setNewMenuCategory}
+      setNewMenuDescription={setNewMenuDescription}
+      setNewMenuPrice={setNewMenuPrice}
+      deleteMenu={deleteMenu}
+      updateMenu={updateMenu}
+    />,
+  };
+
+  return (
+    RestaurantView[view]
   );
 }
 

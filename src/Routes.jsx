@@ -32,7 +32,8 @@ function Routes() {
           <Route path="/cart" element={<OrderController view="cart" />} />
           <Route path="/specialRequest" element={<SpecialRequest view="specialrequest" />} />
           <Route path="/restaurantList" element={<InfoDisplayController view="display" />} />
-          <Route path="/restaurantMenu" element={<RestaurantMenuController view="restaurantMenu" />} />
+          <Route path="/restaurantMenu" element={<RestaurantMenuController view="menu" />} />
+          <Route path="/restaurantMenu/:RestaurantBranch" element={<RestaurantMenuController view="Menu1" />} />
           <Route path="/restaurantListEdit/:restaurantId" element={<InfoDisplayController view="update" />} />
           <Route path="/notifier" element={<NotificationController view="order" />} />
           <Route path="/notifierUpdate" element={<NotificationController view="update" />} />

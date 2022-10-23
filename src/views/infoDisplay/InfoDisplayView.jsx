@@ -12,7 +12,6 @@ function InfoDisplayView({
   setNewHours,
   setNewPickUp,
   deleteBranch,
-  updateRestaurant,
 }) {
   const navigation = useNavigate();
   return (
@@ -42,7 +41,7 @@ function InfoDisplayView({
                 <td>{restaurant.pickUp}</td>
                 <td><button type="submit" onClick={() => { deleteBranch(restaurant.id); }}>Delete Branch</button></td>
                 <td><button type="submit" onClick={() => navigation(`/restaurantListEdit/${restaurant.id}`)}>Update Branch</button></td>
-                <td><button type="submit" onClick={() => { updateRestaurant(); }}>Select Restaurant</button></td>
+                <td><button type="submit" onClick={() => navigation(`/restaurantMenu/${restaurant.restaurantBranch}`)}>Select Restaurant</button></td>
               </tr>
             ))}
           </tbody>
