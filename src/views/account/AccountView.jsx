@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
 function AccountView({ payments }) {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div style={{ textAlign: 'center' }}>
@@ -44,6 +47,7 @@ function AccountView({ payments }) {
         </div>
       ))}
       <h1>Order History</h1>
+      <Button variant="contained" onClick={() => navigate('/orderHistory')}>Go to Order History</Button>
     </div>
   );
 }

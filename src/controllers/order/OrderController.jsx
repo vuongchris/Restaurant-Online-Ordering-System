@@ -6,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  collection, addDoc, doc, getDoc, getDocs, setDoc, updateDoc, serverTimestamp, deleteDoc,
+  collection, addDoc, doc, getDoc, getDocs, updateDoc, serverTimestamp, deleteDoc, query, where,
 } from 'firebase/firestore';
 import { useNavigate } from 'react-router';
 import CartView from '../../views/order/CartView';
@@ -15,6 +15,7 @@ import OrderHistoryView from '../../views/order/OrderHistoryView';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { db } from '../../firebase';
 import OrderConfirmationView from '../../views/order/OrderConfirmationView';
+import ViewOrderView from '../../views/order/ViewOrderView';
 
 function OrderController({ view }) {
   const { currentUser } = useAuth();
@@ -40,6 +41,9 @@ function OrderController({ view }) {
   const [items, setItems] = useState([]);
   const [lastOrderItems, setLastOrderItems] = useState([]);
   const [allOrders, setAllOrders] = useState([]);
+  const [userOrders, setUserOrders] = useState([]);
+
+  const [viewOrderItems, setViewOrderItems] = useState([]);
 
   const getItems = async () => {
     const docSnap = await getDoc(docRef);
@@ -61,10 +65,18 @@ function OrderController({ view }) {
     setLastOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
+  const getUserOrders = async () => {
+    const orderCollectionRef = collection(db, 'order');
+    const q = query(orderCollectionRef, where('userid', '==', currentUser.uid));
+    const data = await getDocs(q);
+    setUserOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
   useEffect(() => {
     getLastOrderItems();
     getAllOrders();
     getItems();
+    getUserOrders();
   }, []);
 
   const toCheckout = async () => {
@@ -169,6 +181,40 @@ function OrderController({ view }) {
     getItems();
   };
 
+  const openOrder = async (id) => {
+    const orderDoc = doc(db, 'order', id);
+    const orderSnap = await getDoc(orderDoc);
+    const getViewOrderItems = async () => {
+      const itemsCollectionRef = collection(db, 'order', id, 'items');
+      const data = await getDocs(itemsCollectionRef);
+      setViewOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getViewOrderItems();
+    navigate('/viewOrder', {
+      state: {
+        orderid: orderSnap.data().orderid,
+        firstName: orderSnap.data().firstName,
+        lastName: orderSnap.data().lastName,
+        addressLineOne: orderSnap.data().address.addressLineOne,
+        addressLineTwo: orderSnap.data().address.addressLineTwo,
+        city: orderSnap.data().address.city,
+        country: orderSnap.data().address.country,
+        postcode: orderSnap.data().address.postcode,
+        state: orderSnap.data().address.state,
+        phoneNumber: orderSnap.data().phoneNumber,
+        deliveryInstructions: orderSnap.data().deliveryInstructions,
+        specialRequests: orderSnap.data().specialRequests,
+        status: orderSnap.data().status,
+        timestamp: orderSnap.data().timestamp,
+        cardName: orderSnap.data().payment.cardName,
+        cardNumber: orderSnap.data().payment.cardNumber,
+        cvv: orderSnap.data().payment.cvv,
+        expiry: orderSnap.data().payment.expiry,
+        total: orderSnap.data().total,
+      },
+    });
+  };
+
   const orderViews = {
     cart: <CartView
       items={items}
@@ -183,9 +229,15 @@ function OrderController({ view }) {
       items={items}
       handleOrderSubmit={handleOrderSubmit}
     />,
-    orderHistory: <OrderHistoryView />,
+    orderHistory: <OrderHistoryView
+      userOrders={userOrders}
+      openOrder={openOrder}
+    />,
     orderConfirmation: <OrderConfirmationView
       lastOrderItems={lastOrderItems}
+    />,
+    viewOrder: <ViewOrderView
+      viewOrderItems={viewOrderItems}
     />,
   };
   return orderViews[view];

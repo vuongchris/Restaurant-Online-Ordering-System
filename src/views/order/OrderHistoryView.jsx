@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -14,12 +15,13 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import TablePagination from '@mui/material/TablePagination/TablePagination';
 import { visuallyHidden } from '@mui/utils';
-import { RowingSharp } from '@mui/icons-material';
 import {
   collection, query, where, getDocs,
 } from 'firebase/firestore';
+import { useNavigate } from 'react-router';
 import { db } from '../../firebase';
 
 function descendingComparator(a, b, orderBy) {
@@ -44,12 +46,6 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Order',
-  },
-  {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
   },
   {
     id: 'status',
@@ -106,22 +102,13 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function OrderHistoryView() {
+function OrderHistoryView({ userOrders, openOrder }) {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('order');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const orderCollectionRef = collection(db, 'order');
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    const getOrders = async () => {
-      const data = await getDocs(orderCollectionRef);
-      setOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getOrders();
-  }, []);
+  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -160,13 +147,10 @@ function OrderHistoryView() {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {orders.slice().sort(getComparator(order, orderBy)).map((row) => (
+                  {userOrders.slice().sort(getComparator(order, orderBy)).map((row) => (
                     <TableRow>
                       <TableCell>
-                        {row.order}
-                      </TableCell>
-                      <TableCell>
-                        {row.date}
+                        {row.orderid}
                       </TableCell>
                       <TableCell>
                         {row.status}
@@ -174,21 +158,23 @@ function OrderHistoryView() {
                       <TableCell>
                         {row.total}
                       </TableCell>
+                      <TableCell>
+                        <Button onClick={() => {
+                          openOrder(row.id);
+                        }}
+                        >
+                          View
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={orders.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
           </Paper>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={() => navigate('/account')}>Back to My Account</Button>
         </Grid>
       </Grid>
     </div>
