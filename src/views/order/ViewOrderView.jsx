@@ -95,7 +95,7 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function ViewOrderView({ viewOrderItems, editOrder }) {
+function ViewOrderView({ viewOrderItems, editOrder, handleCancelOrder }) {
   const location = useLocation();
 
   const [order, setOrder] = useState('asc');
@@ -258,6 +258,17 @@ function ViewOrderView({ viewOrderItems, editOrder }) {
       >
         <Grid item>
           <Button variant="contained" size="large" onClick={() => { editOrder(location.state.id); }}>Edit Order Details</Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={() => { handleCancelOrder(location.state.id); }}
+          >
+            Cancel Order
+
+          </Button>
         </Grid>
         <Grid item>
           <Button variant="contained" size="large" onClick={() => navigate('/orderHistory')}>Back to Order History</Button>

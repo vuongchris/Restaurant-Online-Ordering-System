@@ -134,7 +134,6 @@ function OrderController({ view }) {
         phoneNumber: refs.phoneNumberRef.current.value,
         deliveryInstructions: refs.deliveryInstructionsRef.current.value,
         specialRequests: refs.specialRequestsRef.current.value,
-        status: 'Preparing',
         timestamp: serverTimestamp(),
         total: items.map((item) => item.total).reduce((a, b) => a + b),
       });
@@ -166,6 +165,7 @@ function OrderController({ view }) {
       deliveryInstructions: refs.deliveryInstructionsRef.current.value,
       specialRequests: refs.specialRequestsRef.current.value,
     });
+    getUserOrders();
     navigate('/orderHistory');
   };
 
@@ -273,6 +273,16 @@ function OrderController({ view }) {
     });
   };
 
+  const handleCancelOrder = async (id) => {
+    const orderDoc = doc(db, 'order', id);
+    const orderSnap = await getDoc(orderDoc);
+    await updateDoc(orderDoc, {
+      status: 'Cancelled',
+    });
+    getUserOrders();
+    navigate('/orderHistory');
+  };
+
   const orderViews = {
     cart: <CartView
       items={items}
@@ -297,11 +307,13 @@ function OrderController({ view }) {
     viewOrder: <ViewOrderView
       viewOrderItems={viewOrderItems}
       editOrder={editOrder}
+      handleCancelOrder={handleCancelOrder}
     />,
     editOrder: <EditOrderView
       refs={refs}
       viewOrderItems={viewOrderItems}
       handleEditSubmit={handleEditSubmit}
+      handleCancelOrder={handleCancelOrder}
     />,
   };
   return orderViews[view];
