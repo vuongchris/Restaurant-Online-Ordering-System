@@ -41,7 +41,37 @@ function PaymentController() {
       status: 'Submitted',
       timestamp: serverTimestamp(),
     });
+  };
+
+  const goToOrderConfirmation = async () => {
+    const docRef = doc(db, 'user', currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    const orderDoc = doc(db, 'order', docSnap.data().activeOrder);
+    const orderSnap = await getDoc(orderDoc);
+    navigate('/orderConfirmation', {
+      state: {
+        orderid: orderSnap.data().orderid,
+        firstName: orderSnap.data().firstName,
+        lastName: orderSnap.data().lastName,
+        addressLineOne: orderSnap.data().address.addressLineOne,
+        addressLineTwo: orderSnap.data().address.addressLineTwo,
+        city: orderSnap.data().address.city,
+        country: orderSnap.data().address.country,
+        postcode: orderSnap.data().address.postcode,
+        state: orderSnap.data().address.state,
+        phoneNumber: orderSnap.data().phoneNumber,
+        deliveryInstructions: orderSnap.data().deliveryInstructions,
+        specialRequests: orderSnap.data().specialRequests,
+        status: orderSnap.data().status,
+        timestamp: orderSnap.data().timestamp,
+        cardName: orderSnap.data().payment.cardName,
+        cardNumber: orderSnap.data().payment.cardNumber,
+        cvv: orderSnap.data().payment.cvv,
+        expiry: orderSnap.data().payment.expiry,
+      },
+    });
     await updateDoc(docRef, {
+      lastOrder: docSnap.data().activeOrder,
       activeOrder: 'N/A',
     });
   };
@@ -67,8 +97,7 @@ function PaymentController() {
       if (refs.saveDetailsRef.current.checked) {
         await savePaymentDetails(data);
       }
-      alert('Successfully saved payment details!');
-      navigate('/');
+      goToOrderConfirmation();
     } catch (error) {
       console.log(`Failed to save payment details with error ${error}`);
       setLoading(false);

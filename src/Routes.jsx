@@ -39,6 +39,7 @@ function Routes() {
           <Route path="/createReview" element={<ReviewController view="createReview" />} />
           <Route path="/editReview" element={<ReviewController view="editReview" />} />
           <Route path="/reviews" element={<ReviewController view="reviews" />} />
+          <Route path="/orderConfirmation" element={<OrderController view="orderConfirmation" />} />
         </AppRoutes>
       </AuthProvider>
     </Router>

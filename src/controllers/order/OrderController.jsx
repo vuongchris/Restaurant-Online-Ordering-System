@@ -13,6 +13,7 @@ import CheckoutView from '../../views/order/CheckoutView';
 import OrderHistoryView from '../../views/order/OrderHistoryView';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { db } from '../../firebase';
+import OrderConfirmationView from '../../views/order/OrderConfirmationView';
 
 function OrderController({ view }) {
   const { currentUser } = useAuth();
@@ -36,6 +37,8 @@ function OrderController({ view }) {
   };
 
   const [items, setItems] = useState([]);
+  const [lastOrderItems, setLastOrderItems] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
 
   const getItems = async () => {
     const docSnap = await getDoc(docRef);
@@ -44,7 +47,22 @@ function OrderController({ view }) {
     setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
+  const getAllOrders = async () => {
+    const orderCollectionRef = collection(db, 'order');
+    const data = await getDocs(orderCollectionRef);
+    setAllOrders(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
+  const getLastOrderItems = async () => {
+    const docSnap = await getDoc(docRef);
+    const itemsCollectionRef = collection(db, 'order', docSnap.data().lastOrder, 'items');
+    const data = await getDocs(itemsCollectionRef);
+    setLastOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
   useEffect(() => {
+    getLastOrderItems();
+    getAllOrders();
     getItems();
   }, []);
 
@@ -80,9 +98,12 @@ function OrderController({ view }) {
 
   const handleOrderSubmit = async () => {
     try {
+      getAllOrders();
+      const nextOrderId = allOrders.length + 1;
       const docSnap = await getDoc(docRef);
       const orderDoc = doc(db, 'order', docSnap.data().activeOrder);
       await updateDoc(orderDoc, {
+        orderid: nextOrderId,
         userid: currentUser.uid,
         email: currentUser.email,
         firstName: refs.firstNameRef.current.value,
@@ -157,6 +178,9 @@ function OrderController({ view }) {
       handleOrderSubmit={handleOrderSubmit}
     />,
     orderHistory: <OrderHistoryView />,
+    orderConfirmation: <OrderConfirmationView
+      lastOrderItems={lastOrderItems}
+    />,
   };
   return orderViews[view];
 }

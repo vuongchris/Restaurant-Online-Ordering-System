@@ -20,7 +20,7 @@ function PaymentView({ refs, submitPayment, loading }) {
           <TextField
             label="Name on Card"
             required
-            inputRef={refs.cardNumberRef}
+            inputRef={refs.cardNameRef}
           />
         </Grid>
         <Grid item>
@@ -30,7 +30,7 @@ function PaymentView({ refs, submitPayment, loading }) {
           <TextField
             label="Card Number"
             required
-            inputRef={refs.cardNameRef}
+            inputRef={refs.cardNumberRef}
           />
         </Grid>
         <Grid item>
