@@ -6,6 +6,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import RestaurantMenuView from '../../views/infoDisplay/restaurantMenuView';
+import RestaurantMenuUpdate from '../../views/infoDisplay/restaurantMenuUpdate';
 import { db } from '../../firebase';
 
 function RestaurantMenuController({ view }) {
@@ -17,7 +18,7 @@ function RestaurantMenuController({ view }) {
 
   const [restaurantMenu, setRestaurantMenu] = useState([]);
   const menuCollectionRef = collection(db, 'menu');
-  const { RestaurantName } = useParams();
+  const { RestaurantName, menuId } = useParams();
 
   const addRestaurantMenu = async () => {
     await addDoc(menuCollectionRef, {
@@ -29,8 +30,8 @@ function RestaurantMenuController({ view }) {
   };
 
   const updateMenu = async () => {
-    const restaurantRef = doc(db, 'menu', RestaurantName);
-    await updateDoc(restaurantRef, {
+    const menuRef = doc(db, 'menu', restaurantMenu.id);
+    await updateDoc(menuRef, {
       name: newMenuName,
       category: newMenuCategory,
       description: newMenuDescription,
@@ -45,14 +46,15 @@ function RestaurantMenuController({ view }) {
 
   const getRestaurantMenu = async () => {
     if (RestaurantName && view === 'Menu1') {
-      // const docRef = doc(db, 'restaurant', RestaurantName);
-      // const restaurant = await getDoc(docRef);
       const data = await getDocs(menuCollectionRef);
-      // setRestaurantName({ id: restaurant.id, ...restaurant.data() });
       setRestaurantMenu(await Promise.all(
         (data.docs.map((document) => ({ ...document.data(), id: document.id }))
         ),
       ));
+    } else if (menuId && view === 'Menu2') {
+      const docRef = doc(db, 'menu', menuId);
+      const menu = await getDoc(docRef);
+      setRestaurantMenu({ id: menu.id, ...menu.data() });
     } else {
       const data = await getDocs(menuCollectionRef);
       setRestaurantMenu(await Promise.all(
@@ -64,7 +66,7 @@ function RestaurantMenuController({ view }) {
 
   useEffect(() => {
     getRestaurantMenu();
-  }, []);
+  }, [RestaurantName, menuId]);
 
   const RestaurantView = {
     Menu1: <RestaurantMenuView
@@ -76,6 +78,14 @@ function RestaurantMenuController({ view }) {
       setNewMenuDescription={setNewMenuDescription}
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
+    />,
+    Menu2: <RestaurantMenuUpdate
+      RestaurantName={RestaurantName}
+      restaurantMenu={restaurantMenu}
+      setNewMenuName={setNewMenuName}
+      setNewMenuCategory={setNewMenuCategory}
+      setNewMenuDescription={setNewMenuDescription}
+      setNewMenuPrice={setNewMenuPrice}
       updateMenu={updateMenu}
     />,
     menu: <RestaurantMenuView
@@ -86,7 +96,6 @@ function RestaurantMenuController({ view }) {
       setNewMenuDescription={setNewMenuDescription}
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
-      updateMenu={updateMenu}
     />,
   };
 

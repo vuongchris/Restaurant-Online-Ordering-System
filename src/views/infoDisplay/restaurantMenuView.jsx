@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import './table.css';
+import { useNavigate } from 'react-router';
 
 // Similar function to infoDisplayView but with additional information from the restaurant.
 function RestaurantMenuView({
@@ -12,8 +13,8 @@ function RestaurantMenuView({
   setNewMenuDescription,
   setNewMenuPrice,
   deleteMenu,
-  updateMenu,
 }) {
+  const navigation = useNavigate();
   return (
     <>
       <div>
@@ -41,7 +42,7 @@ function RestaurantMenuView({
                 <td>{menu.price}</td>
                 <td>{menu.description}</td>
                 <td><button type="submit" onClick={() => { deleteMenu(menu.id); }}>Delete Menu</button></td>
-                <td><button type="submit" onClick={() => { updateMenu(); }}>Update Menu</button></td>
+                <td><button type="submit" onClick={() => navigation(`/restaurantMenu/:RestaurantBranch/${menu.id}`)}>Update Menu</button></td>
               </tr>
             ))}
           </tbody>
