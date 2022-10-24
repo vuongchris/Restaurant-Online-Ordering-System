@@ -1,11 +1,9 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
-/* eslint-disable no-else-return */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,13 +11,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/auth/AuthContext';
 
@@ -143,7 +139,7 @@ function CartView({
                     />
                     <TableBody>
                       {items.slice().sort(getComparator(order, orderBy)).slice().map((row) => (
-                        <TableRow>
+                        <TableRow key={row.id}>
                           <TableCell>
                             {row.item}
                           </TableCell>
@@ -183,36 +179,7 @@ function CartView({
           </Grid>
         </div>
       );
-    } else {
-      return (
-        <div>
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-          >
-            <Grid item>
-              <Typography variant="h3">Cart</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => navigate('/')}>Menu</Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => { addOrder(); }}>Add Order</Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => { addItem(); }}>Add Item</Button>
-            </Grid>
-          </Grid>
-        </div>
-      );
     }
-  } else {
     return (
       <div>
         <Grid
@@ -226,15 +193,42 @@ function CartView({
             <Typography variant="h3">Cart</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="p">You need to login to add items to the cart.</Typography>
+            <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={() => navigate('/')}>Login</Button>
+            <Button variant="contained" onClick={() => navigate('/')}>Menu</Button>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => { addOrder(); }}>Add Order</Button>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => { addItem(); }}>Add Item</Button>
           </Grid>
         </Grid>
       </div>
     );
   }
+  return (
+    <div>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
+      >
+        <Grid item>
+          <Typography variant="h3">Cart</Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="p">You need to login to add items to the cart.</Typography>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={() => navigate('/')}>Login</Button>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
 export default CartView;

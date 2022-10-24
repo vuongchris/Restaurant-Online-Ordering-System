@@ -1,8 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
-/* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
-/* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -245,7 +241,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 />
                 <TableBody>
                   {items.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow key={row.description}>
+                    <TableRow key={row.id}>
                       <TableCell>
                         {row.item}
                       </TableCell>

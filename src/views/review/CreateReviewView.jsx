@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
@@ -46,7 +44,7 @@ function CreateReviewView({ toReviews, handleCreateReview }) {
             label="Description"
             required
             multiline
-            rows={5}
+            minRows={5}
             maxRows={20}
             onChange={(event) => {
               setDescription(event.target.value);

@@ -34,7 +34,7 @@ function AccountView({ payments }) {
           <h4>
             Expiry:
             {' '}
-            {card.expiry}
+            {new Date(card.expiry.seconds).toUTCString()}
           </h4>
           <h4>
             CVV:

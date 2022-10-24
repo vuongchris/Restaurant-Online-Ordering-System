@@ -16,8 +16,5 @@
     },
     "plugins": [
         "react"
-    ],
-    "rules": {
-        "linebreak-style": [0 ,"error", "windows"]
-    }
+    ]
 }
