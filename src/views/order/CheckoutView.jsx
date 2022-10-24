@@ -266,6 +266,11 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+          <Typography variant="h6">
+            <strong>Total:</strong>
+            {' '}
+            {items.map((item) => item.total).reduce((a, b) => a + b)}
+          </Typography>
         </Grid>
       </Grid>
       <br />

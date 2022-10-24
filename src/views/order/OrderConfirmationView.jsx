@@ -234,6 +234,13 @@ function OrderConfirmationView({ lastOrderItems }) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+          <Grid item>
+            <Typography variant="h6">
+              <strong>Total:</strong>
+              {' '}
+              {`${location.state.total}`}
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
       <br />
@@ -244,7 +251,7 @@ function OrderConfirmationView({ lastOrderItems }) {
         spacing={1}
       >
         <Grid item>
-          <Button variant="contained" size="large" onClick={() => navigate('/')}>Ok</Button>
+          <Button variant="contained" size="large" onClick={() => navigate('/')}>OK</Button>
         </Grid>
       </Grid>
     </div>

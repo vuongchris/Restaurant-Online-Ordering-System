@@ -1,9 +1,14 @@
 /* eslint-disable react/prop-types */
-import { Button, Grid, TextField } from '@mui/material';
+import {
+  Button, Grid, TextField, Typography,
+} from '@mui/material';
 import React from 'react';
+import { useLocation } from 'react-router';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function PaymentView({ refs, submitPayment, loading }) {
+  const location = useLocation();
+
   return (
     <form onSubmit={submitPayment}>
       <Grid
@@ -13,6 +18,17 @@ function PaymentView({ refs, submitPayment, loading }) {
         alignItems="center"
         spacing={1}
       >
+        <Grid item>
+          <Typography variant="h1">Payment</Typography>
+        </Grid>
+        <br />
+        <Grid item>
+          <Typography variant="h6">
+            Total:
+            {' '}
+            {`${location.state.total}`}
+          </Typography>
+        </Grid>
         <Grid item>
           <h3>Name on card</h3>
         </Grid>

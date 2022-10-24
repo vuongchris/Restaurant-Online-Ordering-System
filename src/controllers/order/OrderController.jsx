@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-shadow */
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
@@ -121,8 +122,13 @@ function OrderController({ view }) {
         specialRequests: refs.specialRequestsRef.current.value,
         status: 'Preparing',
         timestamp: serverTimestamp(),
+        total: items.map((item) => item.total).reduce((a, b) => a + b),
       });
-      navigate('/payment');
+      navigate('/payment', {
+        state: {
+          total: items.map((item) => item.total).reduce((a, b) => a + b),
+        },
+      });
       console.log('Document created!');
     } catch (e) {
       console.error('Error adding document: ', e);

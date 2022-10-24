@@ -68,6 +68,7 @@ function PaymentController() {
         cardNumber: orderSnap.data().payment.cardNumber,
         cvv: orderSnap.data().payment.cvv,
         expiry: orderSnap.data().payment.expiry,
+        total: orderSnap.data().total,
       },
     });
     await updateDoc(docRef, {

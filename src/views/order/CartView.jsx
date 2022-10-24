@@ -171,6 +171,13 @@ function CartView({
               </Paper>
             </Grid>
             <Grid item>
+              <Typography variant="h6">
+                <strong>Total:</strong>
+                {' '}
+                {items.map((item) => item.total).reduce((a, b) => a + b)}
+              </Typography>
+            </Grid>
+            <Grid item>
               <Button variant="contained" size="large" onClick={() => { toCheckout(); }}>Checkout</Button>
             </Grid>
             <Grid item>
