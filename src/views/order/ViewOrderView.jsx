@@ -13,8 +13,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -44,13 +42,13 @@ const headCells = [
   },
   {
     id: 'quantity',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Quantity',
   },
   {
     id: 'total',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Total',
   },
@@ -97,7 +95,7 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function ViewOrderView({ viewOrderItems }) {
+function ViewOrderView({ viewOrderItems, editOrder }) {
   const location = useLocation();
 
   const [order, setOrder] = useState('asc');
@@ -107,7 +105,7 @@ function ViewOrderView({ viewOrderItems }) {
 
   const navigate = useNavigate();
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -122,6 +120,8 @@ function ViewOrderView({ viewOrderItems }) {
     setPage(0);
   };
 
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - viewOrderItems.length) : 0;
+
   return (
     <div>
       <Grid
@@ -131,7 +131,7 @@ function ViewOrderView({ viewOrderItems }) {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Order Confirmation</Typography>
+          <Typography variant="h3">Order Details</Typography>
         </Grid>
       </Grid>
       <br />
@@ -204,19 +204,29 @@ function ViewOrderView({ viewOrderItems }) {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {viewOrderItems.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell>
-                        {row.item}
-                      </TableCell>
-                      <TableCell>
-                        {row.quantity}
-                      </TableCell>
-                      <TableCell>
-                        {row.total}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {viewOrderItems.sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell>
+                          {row.item}
+                        </TableCell>
+                        <TableCell>
+                          {row.quantity}
+                        </TableCell>
+                        <TableCell>
+                          {row.total}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -246,6 +256,9 @@ function ViewOrderView({ viewOrderItems }) {
         alignItems="center"
         spacing={1}
       >
+        <Grid item>
+          <Button variant="contained" size="large" onClick={() => { editOrder(location.state.id); }}>Edit Order Details</Button>
+        </Grid>
         <Grid item>
           <Button variant="contained" size="large" onClick={() => navigate('/orderHistory')}>Back to Order History</Button>
         </Grid>

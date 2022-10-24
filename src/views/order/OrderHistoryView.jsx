@@ -42,10 +42,10 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
-    id: 'order',
+    id: 'orderid',
     numeric: false,
     disablePadding: false,
-    label: 'Order',
+    label: 'Order ID',
   },
   {
     id: 'status',
@@ -55,7 +55,7 @@ const headCells = [
   },
   {
     id: 'total',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Total',
   },
@@ -105,8 +105,8 @@ EnhancedTableHead.propTypes = {
 function OrderHistoryView({ userOrders, openOrder }) {
   const [order, setOrder] = useState('desc');
   const [orderBy, setOrderBy] = useState('order');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const navigate = useNavigate();
 
@@ -124,6 +124,8 @@ function OrderHistoryView({ userOrders, openOrder }) {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userOrders.length) : 0;
+
   return (
     <div>
       <Grid
@@ -147,30 +149,49 @@ function OrderHistoryView({ userOrders, openOrder }) {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {userOrders.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow>
-                      <TableCell>
-                        {row.orderid}
-                      </TableCell>
-                      <TableCell>
-                        {row.status}
-                      </TableCell>
-                      <TableCell>
-                        {row.total}
-                      </TableCell>
-                      <TableCell>
-                        <Button onClick={() => {
-                          openOrder(row.id);
-                        }}
-                        >
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {userOrders.sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                      <TableRow key={row.orderid}>
+                        <TableCell>
+                          {row.orderid}
+                        </TableCell>
+                        <TableCell>
+                          {row.status}
+                        </TableCell>
+                        <TableCell>
+                          {row.total}
+                        </TableCell>
+                        <TableCell>
+                          <Button onClick={() => {
+                            openOrder(row.id);
+                          }}
+                          >
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={userOrders.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </Paper>
         </Grid>
         <Grid item>

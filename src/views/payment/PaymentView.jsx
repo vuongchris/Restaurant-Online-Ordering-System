@@ -19,7 +19,7 @@ function PaymentView({ refs, submitPayment, loading }) {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h1">Payment</Typography>
+          <Typography variant="h3">Payment</Typography>
         </Grid>
         <br />
         <Grid item>

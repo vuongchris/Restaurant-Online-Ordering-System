@@ -42,13 +42,13 @@ const headCells = [
   },
   {
     id: 'quantity',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Quantity',
   },
   {
     id: 'total',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Total',
   },
@@ -103,7 +103,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
 
   const navigate = useNavigate();
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -117,6 +117,8 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
 
   return (
     <div>
@@ -240,19 +242,29 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {items.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell>
-                        {row.item}
-                      </TableCell>
-                      <TableCell>
-                        {row.quantity}
-                      </TableCell>
-                      <TableCell>
-                        {row.total}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {items.sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell>
+                          {row.item}
+                        </TableCell>
+                        <TableCell>
+                          {row.quantity}
+                        </TableCell>
+                        <TableCell>
+                          {row.total}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

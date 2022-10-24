@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -13,8 +12,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
+import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -97,15 +95,14 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function OrderConfirmationView({ lastOrderItems }) {
+function EditOrderView({ refs, viewOrderItems, handleEditSubmit }) {
   const location = useLocation();
 
+  const navigate = useNavigate();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('item');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -122,7 +119,7 @@ function OrderConfirmationView({ lastOrderItems }) {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - lastOrderItems.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - viewOrderItems.length) : 0;
 
   return (
     <div>
@@ -133,72 +130,119 @@ function OrderConfirmationView({ lastOrderItems }) {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Order Confirmation</Typography>
-          <Alert severity="success">
-            <AlertTitle>Success</AlertTitle>
-            Order has been submitted!
-          </Alert>
+          <Typography variant="h3">Edit Order Details</Typography>
         </Grid>
       </Grid>
-      <br />
       <Grid
         container
         spacing={1}
       >
         <Grid item xs={4}>
-          <Typography variant="p">
-            <strong>Order Number:</strong>
-            {' '}
-            {`${location.state.orderid}`}
-          </Typography>
+          <Grid
+            container
+            spacing={1}
+          >
+            <Grid item xs={12}>
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="First Name"
+                inputRef={refs.firstNameRef}
+                defaultValue={location.state.firstName}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Last Name"
+                inputRef={refs.lastNameRef}
+                defaultValue={location.state.lastName}
+              />
+              <br />
+              <br />
+              <TextField
+                style={{ width: '100%', fontSize: '20px' }}
+                label="Address Line 1"
+                inputRef={refs.addressLineOneRef}
+                defaultValue={location.state.addressLineOne}
+              />
+              <br />
+              <br />
+              <TextField
+                style={{ width: '100%', fontSize: '20px' }}
+                label="Address Line 2"
+                inputRef={refs.addressLineTwoRef}
+                defaultValue={location.state.addressLineTwo}
+              />
+              <br />
+              <br />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="City"
+                inputRef={refs.cityRef}
+                defaultValue={location.state.city}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="State"
+                inputRef={refs.stateRef}
+                defaultValue={location.state.state}
+              />
+              <br />
+              <br />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Country"
+                inputRef={refs.countryRef}
+                defaultValue={location.state.country}
+              />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Postcode"
+                inputRef={refs.postcodeRef}
+                defaultValue={location.state.postcode}
+              />
+              <br />
+              <br />
+              <TextField
+                style={{ width: '50%', fontSize: '20px' }}
+                label="Phone Number"
+                inputRef={refs.phoneNumberRef}
+                defaultValue={location.state.phoneNumber}
+              />
+            </Grid>
+          </Grid>
           <br />
+          <Grid
+            container
+            spacing={1}
+          >
+            <Grid item xs={12}>
+              <TextField
+                style={{ width: '100%', fontSize: '20px' }}
+                label="Delivery Instructions"
+                multiline
+                minRows={5}
+                maxRows={20}
+                inputRef={refs.deliveryInstructionsRef}
+                defaultValue={location.state.deliveryInstructions}
+              />
+            </Grid>
+          </Grid>
           <br />
-          <Typography variant="p">
-            <strong>Name:</strong>
-            {' '}
-            {`${location.state.firstName} ${location.state.lastName}`}
-          </Typography>
-          <br />
-          <Typography variant="p">
-            <strong>Address:</strong>
-            {' '}
-            {`${location.state.addressLineOne}, ${location.state.city} ${location.state.state} ${location.state.postcode} ${location.state.country}`}
-          </Typography>
-          <br />
-          <Typography variant="p">
-            <strong>Phone Number:</strong>
-            {' '}
-            {`${location.state.phoneNumber}`}
-          </Typography>
-          <br />
-          <br />
-          <Typography variant="p">
-            <strong>Delivery Instructions:</strong>
-            {' '}
-            {`${location.state.deliveryInstructions}`}
-          </Typography>
-          <br />
-          <Typography variant="p">
-            <strong>Special Requests:</strong>
-            {' '}
-            {`${location.state.specialRequests}`}
-          </Typography>
-          <br />
-          <br />
-          <Typography variant="p"><strong>Payment Details</strong></Typography>
-          <br />
-          <Typography variant="p">
-            <strong>Card Name:</strong>
-            {' '}
-            {`${location.state.cardName}`}
-          </Typography>
-          <br />
-          <Typography variant="p">
-            <strong>Card Number:</strong>
-            {' '}
-            {`${location.state.cardNumber}`}
-          </Typography>
-          <br />
+          <Grid
+            container
+            spacing={1}
+          >
+            <Grid item xs={12}>
+              <TextField
+                style={{ width: '100%', fontSize: '20px' }}
+                label="Special Requests"
+                multiline
+                minRows={5}
+                maxRows={20}
+                inputRef={refs.specialRequestsRef}
+                defaultValue={location.state.specialRequests}
+              />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={8}>
           <Paper>
@@ -210,9 +254,9 @@ function OrderConfirmationView({ lastOrderItems }) {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {lastOrderItems.sort(getComparator(order, orderBy))
+                  {viewOrderItems.sort(getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                      <TableRow key={row.item}>
+                      <TableRow key={row.id}>
                         <TableCell>
                           {row.item}
                         </TableCell>
@@ -239,20 +283,18 @@ function OrderConfirmationView({ lastOrderItems }) {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={lastOrderItems.length}
+              count={viewOrderItems.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-          <Grid item>
-            <Typography variant="h6">
-              <strong>Total:</strong>
-              {' '}
-              {`${location.state.total}`}
-            </Typography>
-          </Grid>
+          <Typography variant="h6">
+            <strong>Total:</strong>
+            {' '}
+            {viewOrderItems.map((item) => item.total).reduce((a, b) => a + b)}
+          </Typography>
         </Grid>
       </Grid>
       <br />
@@ -263,11 +305,22 @@ function OrderConfirmationView({ lastOrderItems }) {
         spacing={1}
       >
         <Grid item>
-          <Button variant="contained" size="large" onClick={() => navigate('/')}>OK</Button>
+          <Button variant="contained" size="large" onClick={() => { handleEditSubmit(location.state.id); }}>Submit</Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={() => navigate('/orderHistory')}
+          >
+            Cancel
+
+          </Button>
         </Grid>
       </Grid>
     </div>
   );
 }
 
-export default OrderConfirmationView;
+export default EditOrderView;

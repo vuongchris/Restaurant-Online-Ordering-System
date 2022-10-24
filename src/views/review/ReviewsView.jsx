@@ -118,7 +118,7 @@ function ReviewsView({ reviews, openReview, deleteReview }) {
 
   const navigate = useNavigate();
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -132,6 +132,8 @@ function ReviewsView({ reviews, openReview, deleteReview }) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reviews.length) : 0;
 
   if (currentUser != null) {
     if (reviews.length > 0) {
@@ -160,28 +162,38 @@ function ReviewsView({ reviews, openReview, deleteReview }) {
                       onRequestSort={handleRequestSort}
                     />
                     <TableBody>
-                      {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
-                        <TableRow key={row.item}>
-                          <TableCell>
-                            {row.item}
-                          </TableCell>
-                          <TableCell>
-                            {row.rating}
-                          </TableCell>
-                          <TableCell>
-                            {row.description}
-                          </TableCell>
-                          <TableCell>
-                            <Button onClick={() => {
-                              openReview(row.id, row.item, row.rating, row.description);
-                            }}
-                            >
-                              Edit
-                            </Button>
-                            <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {reviews.sort(getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                          <TableRow key={row.item}>
+                            <TableCell>
+                              {row.item}
+                            </TableCell>
+                            <TableCell>
+                              {row.rating}
+                            </TableCell>
+                            <TableCell>
+                              {row.description}
+                            </TableCell>
+                            <TableCell>
+                              <Button onClick={() => {
+                                openReview(row.id, row.item, row.rating, row.description);
+                              }}
+                              >
+                                Edit
+                              </Button>
+                              <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      {emptyRows > 0 && (
+                      <TableRow
+                        style={{
+                          height: (53) * emptyRows,
+                        }}
+                      >
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>

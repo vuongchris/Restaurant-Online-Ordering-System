@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-shadow */
 /* eslint-disable no-alert */
@@ -16,6 +17,7 @@ import { useAuth } from '../../contexts/auth/AuthContext';
 import { db } from '../../firebase';
 import OrderConfirmationView from '../../views/order/OrderConfirmationView';
 import ViewOrderView from '../../views/order/ViewOrderView';
+import EditOrderView from '../../views/order/EditOrderView';
 
 function OrderController({ view }) {
   const { currentUser } = useAuth();
@@ -147,6 +149,26 @@ function OrderController({ view }) {
     }
   };
 
+  const handleEditSubmit = async (id) => {
+    const orderDoc = doc(db, 'order', id);
+    await updateDoc(orderDoc, {
+      firstName: refs.firstNameRef.current.value,
+      lastName: refs.lastNameRef.current.value,
+      address: {
+        addressLineOne: refs.addressLineOneRef.current.value,
+        addressLineTwo: refs.addressLineTwoRef.current.value,
+        city: refs.cityRef.current.value,
+        state: refs.stateRef.current.value,
+        country: refs.countryRef.current.value,
+        postcode: refs.postcodeRef.current.value,
+      },
+      phoneNumber: refs.phoneNumberRef.current.value,
+      deliveryInstructions: refs.deliveryInstructionsRef.current.value,
+      specialRequests: refs.specialRequestsRef.current.value,
+    });
+    navigate('/orderHistory');
+  };
+
   const addOrder = async () => {
     const orderCollectionRef = collection(db, 'order');
     const newOrderDoc = await addDoc(orderCollectionRef, {
@@ -192,6 +214,42 @@ function OrderController({ view }) {
     getViewOrderItems();
     navigate('/viewOrder', {
       state: {
+        id: id,
+        orderid: orderSnap.data().orderid,
+        firstName: orderSnap.data().firstName,
+        lastName: orderSnap.data().lastName,
+        addressLineOne: orderSnap.data().address.addressLineOne,
+        addressLineTwo: orderSnap.data().address.addressLineTwo,
+        city: orderSnap.data().address.city,
+        country: orderSnap.data().address.country,
+        postcode: orderSnap.data().address.postcode,
+        state: orderSnap.data().address.state,
+        phoneNumber: orderSnap.data().phoneNumber,
+        deliveryInstructions: orderSnap.data().deliveryInstructions,
+        specialRequests: orderSnap.data().specialRequests,
+        status: orderSnap.data().status,
+        timestamp: orderSnap.data().timestamp,
+        cardName: orderSnap.data().payment.cardName,
+        cardNumber: orderSnap.data().payment.cardNumber,
+        cvv: orderSnap.data().payment.cvv,
+        expiry: orderSnap.data().payment.expiry,
+        total: orderSnap.data().total,
+      },
+    });
+  };
+
+  const editOrder = async (id) => {
+    const orderDoc = doc(db, 'order', id);
+    const orderSnap = await getDoc(orderDoc);
+    const getViewOrderItems = async () => {
+      const itemsCollectionRef = collection(db, 'order', id, 'items');
+      const data = await getDocs(itemsCollectionRef);
+      setViewOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getViewOrderItems();
+    navigate('/editOrder', {
+      state: {
+        id: id,
         orderid: orderSnap.data().orderid,
         firstName: orderSnap.data().firstName,
         lastName: orderSnap.data().lastName,
@@ -238,6 +296,12 @@ function OrderController({ view }) {
     />,
     viewOrder: <ViewOrderView
       viewOrderItems={viewOrderItems}
+      editOrder={editOrder}
+    />,
+    editOrder: <EditOrderView
+      refs={refs}
+      viewOrderItems={viewOrderItems}
+      handleEditSubmit={handleEditSubmit}
     />,
   };
   return orderViews[view];
