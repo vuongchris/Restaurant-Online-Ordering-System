@@ -42,7 +42,7 @@ function RestaurantMenuView({
                 <td>{menu.price}</td>
                 <td>{menu.description}</td>
                 <td><button type="submit" onClick={() => { deleteMenu(menu.id); }}>Delete Menu</button></td>
-                <td><button type="submit" onClick={() => navigation(`/restaurantMenu/:RestaurantBranch/${menu.id}`)}>Update Menu</button></td>
+                <td><button type="submit" onClick={() => navigation(`/restaurantMenu/${RestaurantName}/${menu.id}`)}>Update Menu</button></td>
               </tr>
             ))}
           </tbody>

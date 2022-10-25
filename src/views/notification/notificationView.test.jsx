@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import NotificationView from './notificationView';
@@ -18,5 +19,12 @@ describe('Display View Test Cases', () => {
 
     // Assert
     expect(screen.getByRole('button', { value: 'Send Message' })).toBeEnabled();
+  });
+  it('console.log the text "OK"', () => {
+    const logSpy = jest.spyOn(console, 'log');
+
+    console.log('OK');
+
+    expect(logSpy).toHaveBeenCalledWith('OK');
   });
 });

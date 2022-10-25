@@ -7,7 +7,7 @@ jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
 }));
 
-describe('Display View Test Cases', () => {
+describe('Notification View Test Cases', () => {
   it('The page should load information', () => {
     // Arrange
 

@@ -80,7 +80,7 @@ function InfoDisplayController({ view }) {
 
   useEffect(() => {
     getInfoDisplay();
-  }, [restaurantId]); // KEVIN: Take note of this, it is very important
+  }, [restaurantId]); // Take note of this, it is very important
   // Basically, the page should retrieve the appropriate data whenever the
   // restaurantId in the URL changes
 

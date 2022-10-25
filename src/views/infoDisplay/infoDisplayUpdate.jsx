@@ -41,6 +41,7 @@ function InfoDisplayUpdate({
           </h3>
           <Grid item>
             <TextField
+              id="restName"
               label="Restaurant Name"
               required
               onChange={(event) => setNewRestaurant(event.target.value)}
