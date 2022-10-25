@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { useLocation } from 'react-router';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -7,9 +8,11 @@ import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 
 function CreateReviewView({ toReviews, handleCreateReview }) {
+  const location = useLocation();
+
   const [newRating, setRating] = useState(0);
   const [newDescription, setDescription] = useState('');
-  const [newItem, setItem] = useState('');
+  const [newItem, setItem] = useState(location.state.item);
 
   return (
     <div>
@@ -27,6 +30,8 @@ function CreateReviewView({ toReviews, handleCreateReview }) {
           <TextField
             label="Item"
             required
+            disabled
+            defaultValue={newItem}
             onChange={(event) => {
               setItem(event.target.value);
             }}

@@ -51,10 +51,12 @@ function OrderController({ view }) {
   const [viewOrderItems, setViewOrderItems] = useState([]);
 
   const getItems = async () => {
-    const docSnap = await getDoc(docRef);
-    const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
-    const data = await getDocs(itemsCollectionRef);
-    setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    if (currentUser != null) {
+      const docSnap = await getDoc(docRef);
+      const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
+      const data = await getDocs(itemsCollectionRef);
+      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    }
   };
 
   const getAllOrders = async () => {
@@ -64,10 +66,12 @@ function OrderController({ view }) {
   };
 
   const getLastOrderItems = async () => {
-    const docSnap = await getDoc(docRef);
-    const itemsCollectionRef = collection(db, 'order', docSnap.data().lastOrder, 'items');
-    const data = await getDocs(itemsCollectionRef);
-    setLastOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    if (currentUser != null) {
+      const docSnap = await getDoc(docRef);
+      const itemsCollectionRef = collection(db, 'order', docSnap.data().lastOrder, 'items');
+      const data = await getDocs(itemsCollectionRef);
+      setLastOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    }
   };
 
   const getUserOrders = async () => {
@@ -79,9 +83,9 @@ function OrderController({ view }) {
 
   useEffect(() => {
     getLastOrderItems();
-    getAllOrders();
     getItems();
     getUserOrders();
+    getAllOrders();
   }, []);
 
   const toCheckout = async () => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 /* eslint-disable react/prop-types */
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
@@ -216,7 +217,30 @@ function CartView({
           </Grid>
         </div>
       );
+    } else {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Cart</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => navigate('/restaurantMenu')}>Menu</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
     }
+  } else {
     return (
       <div>
         <Grid
@@ -230,36 +254,15 @@ function CartView({
             <Typography variant="h3">Cart</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
+            <Typography variant="p">You need to login to add items to the cart.</Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={() => navigate('/restaurantMenu')}>Menu</Button>
+            <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
           </Grid>
         </Grid>
       </div>
     );
   }
-  return (
-    <div>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-      >
-        <Grid item>
-          <Typography variant="h3">Cart</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="p">You need to login to add items to the cart.</Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
-        </Grid>
-      </Grid>
-    </div>
-  );
 }
 
 export default CartView;

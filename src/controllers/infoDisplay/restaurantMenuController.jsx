@@ -77,6 +77,14 @@ function RestaurantMenuController({ view }) {
     });
   };
 
+  const goToCreateReview = async (itemName) => {
+    navigate('/createReview', {
+      state: {
+        item: itemName,
+      },
+    });
+  };
+
   useEffect(() => {
     getRestaurantMenu();
   }, [RestaurantName, menuId]);
@@ -92,6 +100,7 @@ function RestaurantMenuController({ view }) {
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
       goToAddCart={goToAddCart}
+      goToCreateReview={goToCreateReview}
     />,
     Menu2: <RestaurantMenuUpdate
       RestaurantName={RestaurantName}
@@ -111,6 +120,7 @@ function RestaurantMenuController({ view }) {
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
       goToAddCart={goToAddCart}
+      goToCreateReview={goToCreateReview}
     />,
   };
 
