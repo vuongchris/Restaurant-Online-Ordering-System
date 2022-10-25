@@ -13,6 +13,7 @@ function RestaurantMenuView({
   setNewMenuDescription,
   setNewMenuPrice,
   deleteMenu,
+  goToAddCart,
 }) {
   const navigation = useNavigate();
   return (
@@ -43,6 +44,7 @@ function RestaurantMenuView({
                 <td>{menu.description}</td>
                 <td><button type="submit" onClick={() => { deleteMenu(menu.id); }}>Delete Menu</button></td>
                 <td><button type="submit" onClick={() => navigation(`/restaurantMenu/${RestaurantName}/${menu.id}`)}>Update Menu</button></td>
+                <td><button type="submit" onClick={() => { goToAddCart(menu.name, menu.category, menu.description, menu.price); }}>Add to Cart</button></td>
               </tr>
             ))}
           </tbody>

@@ -18,6 +18,7 @@ import { db } from '../../firebase';
 import OrderConfirmationView from '../../views/order/OrderConfirmationView';
 import ViewOrderView from '../../views/order/ViewOrderView';
 import EditOrderView from '../../views/order/EditOrderView';
+import AddItemView from '../../views/order/AddItemView';
 
 function OrderController({ view }) {
   const { currentUser } = useAuth();
@@ -39,6 +40,8 @@ function OrderController({ view }) {
     deliveryInstructionsRef: useRef(),
     specialRequestsRef: useRef(),
   };
+
+  const updateQuantityRef = useRef();
 
   const [items, setItems] = useState([]);
   const [lastOrderItems, setLastOrderItems] = useState([]);
@@ -180,27 +183,26 @@ function OrderController({ view }) {
     });
   };
 
-  const addItem = async () => {
+  const addItem = async (itemName, itemCategory, itemDescription, itemPrice) => {
     let docSnap = await getDoc(docRef);
     if (docSnap.data().activeOrder === 'N/A') {
-      const orderCollectionRef = collection(db, 'order');
-      const newOrderDoc = await addDoc(orderCollectionRef, {
-        userid: currentUser.uid,
-        email: currentUser.email,
-      });
-      await updateDoc(docRef, {
-        activeOrder: newOrderDoc.id,
-      });
+      addOrder();
     }
     docSnap = await getDoc(docRef);
     const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
+    const quantityValue = parseInt(updateQuantityRef.current.value, 10);
+    const totalPrice = quantityValue * itemPrice;
     await addDoc(itemsCollectionRef, {
-      item: 'Chocolate Sundae',
-      quantity: 1,
-      price: 3,
-      total: 3,
+      item: itemName,
+      category: itemCategory,
+      description: itemDescription,
+      quantity: quantityValue,
+      price: itemPrice,
+      total: totalPrice,
     });
     getItems();
+    alert('Item has been added');
+    navigate('/restaurantMenu');
   };
 
   const openOrder = async (id) => {
@@ -289,8 +291,6 @@ function OrderController({ view }) {
       updateQuantity={updateQuantity}
       deleteItem={deleteItem}
       toCheckout={toCheckout}
-      addOrder={addOrder}
-      addItem={addItem}
     />,
     checkout: <CheckoutView
       refs={refs}
@@ -314,6 +314,10 @@ function OrderController({ view }) {
       viewOrderItems={viewOrderItems}
       handleEditSubmit={handleEditSubmit}
       handleCancelOrder={handleCancelOrder}
+    />,
+    addItem: <AddItemView
+      updateQuantityRef={updateQuantityRef}
+      addItem={addItem}
     />,
   };
   return orderViews[view];

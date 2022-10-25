@@ -99,7 +99,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function CartView({
-  items, updateQuantity, deleteItem, toCheckout, addOrder, addItem,
+  items, updateQuantity, deleteItem, toCheckout,
 }) {
   const { currentUser } = useAuth();
 
@@ -213,9 +213,6 @@ function CartView({
             <Grid item>
               <Button variant="contained" size="large" onClick={() => { toCheckout(); }}>Checkout</Button>
             </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => { addItem(); }}>Add Item</Button>
-            </Grid>
           </Grid>
         </div>
       );
@@ -236,13 +233,7 @@ function CartView({
             <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={() => navigate('/')}>Menu</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={() => { addOrder(); }}>Add Order</Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={() => { addItem(); }}>Add Item</Button>
+            <Button variant="contained" onClick={() => navigate('/restaurantMenu')}>Menu</Button>
           </Grid>
         </Grid>
       </div>
@@ -264,7 +255,7 @@ function CartView({
           <Typography variant="p">You need to login to add items to the cart.</Typography>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={() => navigate('/')}>Login</Button>
+          <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
         </Grid>
       </Grid>
     </div>

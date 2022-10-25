@@ -4,12 +4,14 @@ import {
   collection, getDoc, addDoc, deleteDoc, getDocs, updateDoc, doc,
 } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import RestaurantMenuView from '../../views/infoDisplay/restaurantMenuView';
 import RestaurantMenuUpdate from '../../views/infoDisplay/restaurantMenuUpdate';
 import { db } from '../../firebase';
 
 function RestaurantMenuController({ view }) {
+  const navigate = useNavigate();
+
   // Add the Create function into the controller
   const [newMenuName, setNewMenuName] = useState('');
   const [newMenuCategory, setNewMenuCategory] = useState('');
@@ -64,6 +66,17 @@ function RestaurantMenuController({ view }) {
     }
   };
 
+  const goToAddCart = async (itemName, itemCategory, itemDescription, itemPrice) => {
+    navigate('/addItem', {
+      state: {
+        item: itemName,
+        category: itemCategory,
+        description: itemDescription,
+        price: itemPrice,
+      },
+    });
+  };
+
   useEffect(() => {
     getRestaurantMenu();
   }, [RestaurantName, menuId]);
@@ -78,6 +91,7 @@ function RestaurantMenuController({ view }) {
       setNewMenuDescription={setNewMenuDescription}
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
+      goToAddCart={goToAddCart}
     />,
     Menu2: <RestaurantMenuUpdate
       RestaurantName={RestaurantName}
@@ -96,6 +110,7 @@ function RestaurantMenuController({ view }) {
       setNewMenuDescription={setNewMenuDescription}
       setNewMenuPrice={setNewMenuPrice}
       deleteMenu={deleteMenu}
+      goToAddCart={goToAddCart}
     />,
   };
 
