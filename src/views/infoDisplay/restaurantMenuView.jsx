@@ -34,6 +34,8 @@ function RestaurantMenuView({
               <th>Menu Description</th>
               <th>Delete Menu</th>
               <th>Update Menu</th>
+              <th>Cart</th>
+              <th>Reviews</th>
             </tr>
 
             {restaurantMenu.map((menu) => (
