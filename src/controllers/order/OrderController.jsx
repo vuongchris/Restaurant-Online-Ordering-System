@@ -182,7 +182,7 @@ function OrderController({ view }) {
 
   const addItem = async (itemName, itemCategory, itemDescription, itemPrice) => {
     let docSnap = await getDoc(docRef);
-    if (docSnap.data().activeOrder === 'N/A') {
+    if (docSnap.data().activeOrder === 'None') {
       const orderCollectionRef = collection(db, 'order');
       const newOrderDoc = await addDoc(orderCollectionRef, {
         userid: currentUser.uid,
@@ -190,7 +190,7 @@ function OrderController({ view }) {
       });
       await updateDoc(docRef, {
         activeOrder: newOrderDoc.id,
-        lastOrder: 'N/A',
+        lastOrder: 'None',
       });
     }
     docSnap = await getDoc(docRef);

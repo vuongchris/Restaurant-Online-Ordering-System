@@ -74,7 +74,7 @@ function PaymentController() {
     });
     await updateDoc(docRef, {
       lastOrder: docSnap.data().activeOrder,
-      activeOrder: 'N/A',
+      activeOrder: 'None',
     });
   };
 
