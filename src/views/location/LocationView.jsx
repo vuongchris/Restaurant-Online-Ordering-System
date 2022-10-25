@@ -6,7 +6,6 @@ import React from 'react';
 import {
   GoogleMap, LoadScript, MarkerF, InfoWindowF,
 } from '@react-google-maps/api';
-import './LocationView.css';
 
 function LocationView({
   locations, containerStyle, activeMarker, setActiveMarker, handleActiveMarker, center, onLoad,

@@ -279,8 +279,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
             />
           </Paper>
           <Typography variant="h6">
-            <strong>Total:</strong>
-            {' '}
+            <strong>Total: $</strong>
             {items.map((item) => item.total).reduce((a, b) => a + b)}
           </Typography>
         </Grid>

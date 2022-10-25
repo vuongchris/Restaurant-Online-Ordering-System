@@ -19,26 +19,35 @@ function HomeView() {
     <div
       style={{ textAlign: 'center' }}
     >
-      <h1>Welcome to 41026 - Advanced Software Development!</h1>
-      <Link to="login">LOGIN</Link>
-      <br />
-      <Link to="register">REGISTER</Link>
-      <br />
-      <Link to="cart">CART</Link>
-      <br />
-      <Link to="payment">PAYMENT</Link>
-      <br />
-      <Link to="Locations">LOCATIONS</Link>
-      <br />
-      <Link to="restaurantList">Restaurant List</Link>
-      <br />
-      <Link to="restaurantMenu">Menu List [TEMPORARY FOR DEBUGGING]</Link>
-      <br />
-      <Link to="notifier">Notification</Link>
-      <br />
-      <Link to="customerService">CUSTOMER SERVICE</Link>
-      <br />
-      <Link to="reviews">REVIEW</Link>
+      <h1>Welcome to Restaurant Online Ordering System!</h1>
+      {!currentUser && (
+      <div>
+        <Link to="login">LOGIN</Link>
+        <br />
+        <Link to="register">REGISTER</Link>
+        <br />
+        <h3>Please Login or Register to access all of the available functionalities.</h3>
+      </div>
+      )}
+      {currentUser && (
+      <div>
+        <Link to="cart">CART</Link>
+        <br />
+        <Link to="payment">PAYMENT</Link>
+        <br />
+        <Link to="Locations">LOCATIONS</Link>
+        <br />
+        <Link to="restaurantList">Restaurant List</Link>
+        <br />
+        <Link to="restaurantMenu">Menu</Link>
+        <br />
+        <Link to="notifier">Notification</Link>
+        <br />
+        <Link to="customerService">CUSTOMER SERVICE</Link>
+        <br />
+        <Link to="reviews">REVIEW</Link>
+      </div>
+      )}
 
       {/** Display a logout button if a user is signed in */}
       {currentUser && (
