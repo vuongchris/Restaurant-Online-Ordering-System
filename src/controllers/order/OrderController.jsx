@@ -176,21 +176,17 @@ function OrderController({ view }) {
     navigate('/orderHistory');
   };
 
-  const addOrder = async () => {
-    const orderCollectionRef = collection(db, 'order');
-    const newOrderDoc = await addDoc(orderCollectionRef, {
-      userid: currentUser.uid,
-      email: currentUser.email,
-    });
-    await updateDoc(docRef, {
-      activeOrder: newOrderDoc.id,
-    });
-  };
-
   const addItem = async (itemName, itemCategory, itemDescription, itemPrice) => {
     let docSnap = await getDoc(docRef);
     if (docSnap.data().activeOrder === 'N/A') {
-      addOrder();
+      const orderCollectionRef = collection(db, 'order');
+      const newOrderDoc = await addDoc(orderCollectionRef, {
+        userid: currentUser.uid,
+        email: currentUser.email,
+      });
+      await updateDoc(docRef, {
+        activeOrder: newOrderDoc.id,
+      });
     }
     docSnap = await getDoc(docRef);
     const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
