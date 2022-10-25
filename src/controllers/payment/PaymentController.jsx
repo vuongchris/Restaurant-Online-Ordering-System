@@ -86,7 +86,7 @@ function PaymentController() {
     const orderSnap = await getDoc(orderDoc);
     const subCollection = collection(db, 'order', orderDoc.id, 'items');
     const subCollectSnap = await getDocs(subCollection);
-    const itemNames = subCollectSnap.docs.map((item) => item.data().name);
+    const itemNames = subCollectSnap.docs.map((item) => item.data().item);
 
     // Load the information to an constant
     const e = {
@@ -96,7 +96,7 @@ function PaymentController() {
         email: currentUser.email,
         name: orderSnap.data().firstName,
         subject: ('Your order has been submitted'),
-        message: (`placed at this time ${orderSnap.data().timestamp}${itemNames}`),
+        message: (`Your order total cost is $ ${orderSnap.data().total},  you have ordered ${itemNames.join('\n')}`),
         contact_number: orderSnap.data().orderid,
       },
     };
