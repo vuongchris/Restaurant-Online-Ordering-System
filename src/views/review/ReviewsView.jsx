@@ -150,9 +150,6 @@ function ReviewsView({ reviews, openReview, deleteReview }) {
               <Typography variant="h3">Reviews</Typography>
             </Grid>
             <Grid item>
-              <Button variant="contained" onClick={() => navigate('/createReview')}>Create Review</Button>
-            </Grid>
-            <Grid item>
               <Paper>
                 <TableContainer>
                   <Table>
@@ -225,10 +222,10 @@ function ReviewsView({ reviews, openReview, deleteReview }) {
               <Typography variant="h3">Reviews</Typography>
             </Grid>
             <Grid item>
-              <Typography variant="p">No reviews on this account. To create a review click the button below.</Typography>
+              <Typography variant="p">No reviews on this account. To create a review go to the menu and select an item to review.</Typography>
             </Grid>
             <Grid item>
-              <Button variant="contained" onClick={() => navigate('/createReview')}>Create Review</Button>
+              <Button variant="contained" onClick={() => navigate('/restaurantMenu')}>Create Review</Button>
             </Grid>
           </Grid>
         </div>

@@ -52,8 +52,8 @@ function ReviewController({ view }) {
   };
 
   const toReviews = async () => {
-    navigate('/reviews');
     getReviews();
+    navigate('/restaurantMenu');
   };
 
   const handleCreateReview = async (newItem, newRating, newDescription) => {
