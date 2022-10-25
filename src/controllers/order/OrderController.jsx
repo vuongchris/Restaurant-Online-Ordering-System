@@ -51,11 +51,13 @@ function OrderController({ view }) {
   const [viewOrderItems, setViewOrderItems] = useState([]);
 
   const getItems = async () => {
-    if (currentUser != null) {
+    try {
       const docSnap = await getDoc(docRef);
       const itemsCollectionRef = collection(db, 'order', docSnap.data().activeOrder, 'items');
       const data = await getDocs(itemsCollectionRef);
       setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -66,11 +68,13 @@ function OrderController({ view }) {
   };
 
   const getLastOrderItems = async () => {
-    if (currentUser != null) {
+    try {
       const docSnap = await getDoc(docRef);
       const itemsCollectionRef = collection(db, 'order', docSnap.data().lastOrder, 'items');
       const data = await getDocs(itemsCollectionRef);
       setLastOrderItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -178,7 +182,7 @@ function OrderController({ view }) {
 
   const addItem = async (itemName, itemCategory, itemDescription, itemPrice) => {
     let docSnap = await getDoc(docRef);
-    if (docSnap.data().activeOrder === 'N/A') {
+    if (docSnap.data().activeOrder === 'None') {
       const orderCollectionRef = collection(db, 'order');
       const newOrderDoc = await addDoc(orderCollectionRef, {
         userid: currentUser.uid,
@@ -186,6 +190,7 @@ function OrderController({ view }) {
       });
       await updateDoc(docRef, {
         activeOrder: newOrderDoc.id,
+        lastOrder: 'None',
       });
     }
     docSnap = await getDoc(docRef);

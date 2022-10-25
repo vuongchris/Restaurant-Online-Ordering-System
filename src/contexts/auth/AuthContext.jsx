@@ -39,7 +39,8 @@ export function AuthProvider({ children }) {
     const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
     setDoc(doc(userCollectionRef, userCredentials.user.uid), {
       email,
-      activeOrder: 'N/A',
+      activeOrder: 'None',
+      lastOrder: 'None',
     });
   };
 
