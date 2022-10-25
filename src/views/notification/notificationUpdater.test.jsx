@@ -1,20 +1,20 @@
 /* eslint-disable no-console */
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import NotificationView from './notificationView';
+import NotificationUpdater from './notificationUpdater';
 
 jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
 }));
 
-describe('Display View Test Cases', () => {
+describe('Notification View Test Cases', () => {
   it('The page should load information', () => {
     // Arrange
 
-    // jest.spyOn(NotificationView, 'sendEmail').mockImplementation(() => emailInfo);
+    // jest.spyOn(NotificationUpdater, 'sendEmail').mockImplementation(() => emailInfo);
 
     // Act
-    render(<NotificationView />);
+    render(<NotificationUpdater />);
     // const restaurantName = screen.getByText(emailInfo[0].email);
 
     // Assert

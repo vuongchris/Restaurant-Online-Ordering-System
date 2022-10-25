@@ -1,11 +1,11 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import {
-  collection, getDocs, addDoc, deleteDoc, setDoc, query, where, updateDoc, doc,
+  addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc,
 } from 'firebase/firestore';
-import React, { useState, useEffect } from 'react';
-import InfoDisplayView from '../../views/infoDisplay/InfoDisplayView';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { db } from '../../firebase';
+import InfoDisplayUpdate from '../../views/infoDisplay/infoDisplayUpdate';
+import InfoDisplayView from '../../views/infoDisplay/InfoDisplayView';
 
 function InfoDisplayController({ view }) {
   // Add the Create function into the controller
@@ -17,7 +17,16 @@ function InfoDisplayController({ view }) {
 
   const [infoDisplay, setInfoDisplays] = useState([]);
   const infoDisplayCollection = collection(db, 'restaurant');
+  const navigation = useNavigate();
 
+  // This gets the :restaurantId parameter from the URL
+  // Take a look at Routes.jsx
+  // Also take a look at the URL when you visit the restaurant update screen
+  const { restaurantId } = useParams();
+
+  /**
+   * Add a new restaurant
+   */
   const addRestaurant = async () => {
     await addDoc(infoDisplayCollection, {
       restaurantBranch: newRestaurant,
@@ -28,65 +37,55 @@ function InfoDisplayController({ view }) {
     });
   };
 
+  /**
+   * Update an existing restaurant's details
+   */
   const updateRestaurant = async () => {
-    const q = query(collection(db, 'restaurant'), where('restaurantBranch', '==', newRestaurant));
-    // basically gets a query going for specifically restaurant docs
-    const querySnapshot = await getDocs(q);
-    let id = '';
-    querySnapshot.forEach(async (document) => {
-    // this line will get the document id of the restaurant
-      id = document.id;
-      const getRestaurant = doc(db, 'restaurant', id);
-      // Set the updated document
-      await updateDoc(getRestaurant, {
-        restaurantBranch: newRestaurant,
-        location: newLocation,
-      });
+    const restaurantRef = doc(db, 'restaurant', infoDisplay.id);
+    await updateDoc(restaurantRef, {
+      restaurantBranch: newRestaurant,
+      Location: newLocation,
     });
+    // Redirect to homepage
+    navigation('/');
   };
 
+  /**
+   * Delete a restaurant
+   * @param {*} id - The Firebase ID of the restaurant document to delete
+   */
   const deleteBranch = async (id) => {
     const restaurantDoc = doc(db, 'restaurant', id);
     await deleteDoc(restaurantDoc);
   };
 
-  useEffect(() => {
-    const getInfoDisplay = async () => {
+  /**
+   * Retrieve the data to show when the page loads
+   */
+  const getInfoDisplay = async () => {
+    // Case 1: Restaurant Update screen - only retrieve a single restaurant by its id
+    if (restaurantId && view === 'update') {
+      const docRef = doc(db, 'restaurant', restaurantId);
+      const restaurant = await getDoc(docRef);
+      setInfoDisplays({ id: restaurant.id, ...restaurant.data() });
+    } else {
+      // Case 2: Restaurant List screen - Retrieve all restaurants
       const data = await getDocs(infoDisplayCollection);
       setInfoDisplays(await Promise.all(
         (data.docs.map((document) => ({ ...document.data(), id: document.id }))
         ),
       ));
-    };
+    }
+  };
 
+  useEffect(() => {
     getInfoDisplay();
-  }, []);
+  }, [restaurantId]); // Take note of this, it is very important
+  // Basically, the page should retrieve the appropriate data whenever the
+  // restaurantId in the URL changes
 
-  // const testViews = {
-  //   display:
-  //     (
-  //       <div>
-  //         {infoDisplay.map((restaurant) => (
-  //           <table>
-  //             <tr>
-  //               <th>Restaurant Name</th>
-  //               <th>Location</th>
-  //               <th>Distance</th>
-  //             </tr>
-  //             <tr>
-  //               <td>{restaurant.Restaurant_Branch}</td>
-  //               <td>Haymarket</td>
-  //               <td>1.2 km away</td>
-  //             </tr>
-  //           </table>
-  //         ))}
-  //       </div>
-  //     ),
-  // };
-
-  // return testViews[view];
-  return (
-    <InfoDisplayView
+  const DisplayView = {
+    display: <InfoDisplayView
       infoDisplay={infoDisplay}
       addRestaurant={addRestaurant}
       setNewRestaurant={setNewRestaurant}
@@ -96,7 +95,17 @@ function InfoDisplayController({ view }) {
       setNewPickUp={setNewPickUp}
       deleteBranch={deleteBranch}
       updateRestaurant={updateRestaurant}
-    />
+    />,
+    update: <InfoDisplayUpdate
+      infoDisplay={infoDisplay}
+      setNewRestaurant={setNewRestaurant}
+      setNewLocation={setNewLocation}
+      updateRestaurant={updateRestaurant}
+    />,
+  };
+
+  return (
+    DisplayView[view]
   );
 }
 
