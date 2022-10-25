@@ -16,7 +16,7 @@ function RestaurantMenuController({ view }) {
   const [newMenuName, setNewMenuName] = useState('');
   const [newMenuCategory, setNewMenuCategory] = useState('');
   const [newMenuDescription, setNewMenuDescription] = useState('');
-  const [newMenuPrice, setNewMenuPrice] = useState('');
+  const [newMenuPrice, setNewMenuPrice] = useState(0);
 
   const [restaurantMenu, setRestaurantMenu] = useState([]);
   const menuCollectionRef = collection(db, 'menu');
@@ -29,6 +29,7 @@ function RestaurantMenuController({ view }) {
       description: newMenuDescription,
       price: newMenuPrice,
     });
+    window.location.reload();
   };
 
   const updateMenu = async () => {
@@ -39,11 +40,13 @@ function RestaurantMenuController({ view }) {
       description: newMenuDescription,
       price: newMenuPrice,
     });
+    window.location.reload();
   };
 
   const deleteMenu = async (id) => {
     const restaurantMenuDoc = doc(db, 'menu', id);
     await deleteDoc(restaurantMenuDoc);
+    window.location.reload();
   };
 
   const getRestaurantMenu = async () => {

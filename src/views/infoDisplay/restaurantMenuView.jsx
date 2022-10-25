@@ -57,7 +57,7 @@ function RestaurantMenuView({
       </div>
       <input placeholder="menu name..." onChange={(event) => { setNewMenuName(event.target.value); }} />
       <input placeholder="menu category..." onChange={(event) => { setNewMenuCategory(event.target.value); }} />
-      <input placeholder="price..." onChange={(event) => { setNewMenuPrice(event.target.value); }} />
+      <input type="number" placeholder="price..." min="0" onChange={(event) => { setNewMenuPrice(event.target.value); }} />
       <input placeholder="description..." onChange={(event) => { setNewMenuDescription(event.target.value); }} />
       <button type="submit" onClick={addRestaurantMenu}> test button </button>
       <div />

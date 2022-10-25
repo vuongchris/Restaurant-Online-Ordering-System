@@ -90,11 +90,13 @@ function PaymentController() {
 
     // Load the information to an constant
     const e = {
+      preventDefault: () => null,
       target: {
+        reset: () => null,
         email: currentUser.email,
         name: orderSnap.data().firstName,
-        subject: (`Your order has been submitted ${orderSnap.data().orderid}`),
-        message: itemNames,
+        subject: ('Your order has been submitted'),
+        message: (`placed at this time ${orderSnap.data().timestamp}${itemNames}`),
         contact_number: orderSnap.data().orderid,
       },
     };

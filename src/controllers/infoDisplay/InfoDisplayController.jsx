@@ -35,6 +35,7 @@ function InfoDisplayController({ view }) {
       Hours: newHours,
       pickUp: newPickUp,
     });
+    window.location.reload();
   };
 
   /**
@@ -57,6 +58,7 @@ function InfoDisplayController({ view }) {
   const deleteBranch = async (id) => {
     const restaurantDoc = doc(db, 'restaurant', id);
     await deleteDoc(restaurantDoc);
+    window.location.reload();
   };
 
   /**
