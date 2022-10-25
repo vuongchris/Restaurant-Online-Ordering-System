@@ -33,8 +33,6 @@ function HomeView() {
       <div>
         <Link to="cart">CART</Link>
         <br />
-        <Link to="payment">PAYMENT</Link>
-        <br />
         <Link to="Locations">LOCATIONS</Link>
         <br />
         <Link to="restaurantList">Restaurant List</Link>
