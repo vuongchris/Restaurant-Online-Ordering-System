@@ -3,6 +3,11 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 
+/**
+ * Retrieves a user's saved payment details
+ * @param {*} id The ID of the user whose payment details are to be retrieved
+ * @returns Promise
+ */
 export const getSavedPaymentDetails = async (id) => {
   const paymentsRef = collection(db, 'payment');
   const q = query(paymentsRef, where('userid', '==', id));

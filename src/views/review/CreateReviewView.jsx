@@ -1,41 +1,18 @@
-/* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../../firebase';
 
-function CreateReviewView() {
+function CreateReviewView({ toReviews, handleCreateReview }) {
+  const location = useLocation();
+
   const [newRating, setRating] = useState(0);
   const [newDescription, setDescription] = useState('');
-  const [newItem, setItem] = useState('');
-
-  const reviewCollectionRef = collection(db, 'review');
-
-  const navigate = useNavigate();
-
-  const handleReviewSubmit = async () => {
-    try {
-      await addDoc(reviewCollectionRef, {
-        item: newItem,
-        rating: newRating,
-        description: newDescription,
-      });
-      navigate('/reviews');
-      console.log('Document created!');
-    } catch (e) {
-      console.error('Error adding document: ', e);
-    }
-  };
-
-  const toReviews = async () => {
-    navigate('/reviews');
-  };
+  const [newItem, setItem] = useState(location.state.item);
 
   return (
     <div>
@@ -53,6 +30,8 @@ function CreateReviewView() {
           <TextField
             label="Item"
             required
+            disabled
+            defaultValue={newItem}
             onChange={(event) => {
               setItem(event.target.value);
             }}
@@ -70,7 +49,7 @@ function CreateReviewView() {
             label="Description"
             required
             multiline
-            rows={5}
+            minRows={5}
             maxRows={20}
             onChange={(event) => {
               setDescription(event.target.value);
@@ -81,7 +60,7 @@ function CreateReviewView() {
           <Button
             variant="contained"
             size="large"
-            onClick={handleReviewSubmit}
+            onClick={() => { handleCreateReview(newItem, newRating, newDescription); }}
           >
             Submit
           </Button>
@@ -91,7 +70,7 @@ function CreateReviewView() {
             variant="contained"
             size="large"
             color="error"
-            onClick={toReviews}
+            onClick={() => { toReviews(); }}
           >
             Cancel
 

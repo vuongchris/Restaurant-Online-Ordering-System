@@ -1,35 +1,56 @@
-/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/prop-types */
-// eslint-disable-next-line no-unused-vars
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
-function CustomerService({
-  // eslint-disable-next-line no-unused-vars
-  customerServiceRef,
-}) {
+// 3 function parameters passed from the controller
+function CustomerService({ newCustomerTicket, handleSubmit, loading }) {
+  // Redirect the user to another page using this
+  const navigate = useNavigate();
   return (
     <div
       style={{ textAlign: 'center' }}
     >
-      {/* might change to some other user story, too hard to implement */}
       <h1>Welcome to the Customer Service</h1>
       <div>
         Please state what assistant do you need and our agent will get back to you shortly.
       </div>
-      <div>
-        <TextField
-          style={{ width: '30%', fontSize: '20px', margin: '20px' }}
-          label="Customer Service"
-          required
-          multiline
-          minRows={5}
-          maxRows={10}
-          inputRef={customerServiceRef}
-        />
-        <br />
-        <Button variant="contained" size="large">Submit</Button>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <TextField
+            style={{
+              width: '30%',
+              fontSize: '20px',
+              margin: '20px',
+            }}
+            label="Customer Service"
+            multiline
+            minRows={5}
+            maxRows={10}
+            required
+            inputRef={newCustomerTicket}
+          />
+          <br />
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={loading}
+          >
+            Submit
+          </Button>
+          <br />
+          <br />
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={() => navigate('/')}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
     </div>
 
   );

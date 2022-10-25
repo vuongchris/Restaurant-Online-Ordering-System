@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-alert */
+/* eslint-disable no-else-return */
 /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
@@ -16,13 +19,10 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import { visuallyHidden } from '@mui/utils';
-import {
-  collection, deleteDoc, doc, getDocs,
-} from 'firebase/firestore';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { db } from '../../firebase';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -108,30 +108,17 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function ReviewsView() {
+function ReviewsView({ reviews, openReview, deleteReview }) {
+  const { currentUser } = useAuth();
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('total');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const reviewCollectionRef = collection(db, 'review');
-  const [reviews, setReviews] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const navigate = useNavigate();
 
-  const toCreateReview = async () => {
-    navigate('/createReview');
-  };
-
-  useEffect(() => {
-    const getReviews = async () => {
-      const data = await getDocs(reviewCollectionRef);
-      setReviews(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getReviews();
-  }, []);
-
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -146,89 +133,127 @@ function ReviewsView() {
     setPage(0);
   };
 
-  const openReview = async (reviewId, reviewItem, reviewRating, reviewDescription) => {
-    navigate('/editReview', {
-      state: {
-        id: reviewId, item: reviewItem, rating: reviewRating, description: reviewDescription,
-      },
-    });
-  };
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reviews.length) : 0;
 
-  const deleteReview = async (id) => {
-    try {
-      const reviewDoc = doc(db, 'review', id);
-      await deleteDoc(reviewDoc);
-      console.log('Document deleted!');
-    } catch (e) {
-      console.error('Error deleting document: ', e);
-    }
-    window.location.reload();
-  };
-
-  return (
-    <div>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-      >
-        <Grid item>
-          <Typography variant="h3">Reviews</Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={toCreateReview}>Create Review</Button>
-        </Grid>
-        <Grid item>
-          <Paper>
-            <TableContainer>
-              <Table>
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                  {reviews.slice().sort(getComparator(order, orderBy)).map((row) => (
-                    <TableRow key={row.item}>
-                      <TableCell>
-                        {row.item}
-                      </TableCell>
-                      <TableCell>
-                        {row.rating}
-                      </TableCell>
-                      <TableCell>
-                        {row.description}
-                      </TableCell>
-                      <TableCell>
-                        <Button onClick={() => {
-                          openReview(row.id, row.item, row.rating, row.description);
+  if (currentUser != null) {
+    if (reviews.length > 0) {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Reviews</Typography>
+            </Grid>
+            <Grid item>
+              <Paper>
+                <TableContainer>
+                  <Table>
+                    <EnhancedTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                      {reviews.sort(getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                          <TableRow key={row.item}>
+                            <TableCell>
+                              {row.item}
+                            </TableCell>
+                            <TableCell>
+                              {row.rating}
+                            </TableCell>
+                            <TableCell>
+                              {row.description}
+                            </TableCell>
+                            <TableCell>
+                              <Button onClick={() => {
+                                openReview(row.id, row.item, row.rating, row.description);
+                              }}
+                              >
+                                Edit
+                              </Button>
+                              <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      {emptyRows > 0 && (
+                      <TableRow
+                        style={{
+                          height: (53) * emptyRows,
                         }}
-                        >
-                          Edit
-                        </Button>
-                        <Button color="error" onClick={() => { deleteReview(row.id); }}><DeleteIcon /></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={reviews.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+                      >
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={reviews.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Paper>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Reviews</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="p">No reviews on this account. To create a review go to the menu and select an item to review.</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => navigate('/restaurantMenu')}>Create Review</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    }
+  } else {
+    return (
+      <div>
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <Grid item>
+            <Typography variant="h3">Reviews</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="p">To create, edit or view reviews, you need to login.</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default ReviewsView;

@@ -1,97 +1,96 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable linebreak-style */
-import React, { useState } from 'react';
-import { Button, Grid, TextField } from '@mui/material';
-import { CheckBox } from '@mui/icons-material';
-import DatePicker from 'react-datepicker';
+/* eslint-disable react/prop-types */
+import {
+  Button, Grid, TextField, Typography,
+} from '@mui/material';
+import React from 'react';
+import { useLocation } from 'react-router';
 import 'react-datepicker/dist/react-datepicker.css';
 
-function PaymentView(submitPayment) {
-  const [startDate, setStartDate] = useState(new Date());
-  const useSaved = false;
+function PaymentView({ refs, submitPayment, loading }) {
+  const location = useLocation();
+
   return (
-    <div>
-      <div>
-        <form onSubmit={submitPayment}>
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
+    <form onSubmit={submitPayment}>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={1}
+      >
+        <Grid item>
+          <Typography variant="h3">Payment</Typography>
+        </Grid>
+        <br />
+        <Grid item>
+          <Typography variant="h6">
+            Total:
+            {' '}
+            {`${location.state.total}`}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <h3>Name on card</h3>
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Name on Card"
+            required
+            inputRef={refs.cardNameRef}
+          />
+        </Grid>
+        <Grid item>
+          <h3>Card Number</h3>
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Card Number"
+            required
+            inputRef={refs.cardNumberRef}
+          />
+        </Grid>
+        <Grid item>
+          <h3>Expiry Date</h3>
+        </Grid>
+        <Grid item>
+          <TextField
+            type="date"
+            required
+            inputRef={refs.expiryRef}
+          />
+        </Grid>
+        <Grid item>
+          <h3>CVV</h3>
+        </Grid>
+        <Grid item>
+          <TextField
+            label="CVV"
+            required
+            inputRef={refs.cvvRef}
+          />
+        </Grid>
+        <Grid item>
+          Save Payment Details?
+        </Grid>
+        <Grid item>
+          <input
+            type="checkbox"
+            label="Save Paymanent Details?"
+            ref={refs.saveDetailsRef}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={loading}
           >
-            <Grid item>
-              <h3>Card Number</h3>
-            </Grid>
-            <Grid item>
-              <TextField
-                label="cardNumber"
-                required
-              />
-            </Grid>
-            <Grid item>
-              <h3>Name on card</h3>
-            </Grid>
-            <Grid item>
-              <TextField
-                label="name"
-                required
-              />
-            </Grid>
-            <Grid item>
-              <h3>Expiry Date</h3>
-            </Grid>
-            <Grid item>
-              <DatePicker
-                label="expiryDate"
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                required
-              />
-            </Grid>
-            <Grid item>
-              <h3>CCV</h3>
-            </Grid>
-            <Grid item>
-              <TextField
-                label="ccv"
-                required
-              />
-            </Grid>
-            <Grid item>
-              Save Payment Details?
-            </Grid>
-            <Grid item>
-              <CheckBox
-                label="Save"
-                required
-              />
-            </Grid>
-            <Grid item>
-              Use Saved Payment Details?
-            </Grid>
-            <Grid item>
-              <CheckBox
-                label="UseSaved"
-                required
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-              >
-                submit
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <div>
-        {useSaved && <h1>Saved Payment Details</h1> }
-      </div>
-    </div>
+            Submit
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 }
 

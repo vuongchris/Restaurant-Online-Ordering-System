@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,11 +13,10 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -95,7 +95,9 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function CheckoutView({ refs, items, handleOrderSubmit }) {
+function ViewOrderView({ viewOrderItems, editOrder, handleCancelOrder }) {
+  const location = useLocation();
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('item');
   const [page, setPage] = useState(0);
@@ -118,7 +120,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - viewOrderItems.length) : 0;
 
   return (
     <div>
@@ -129,108 +131,68 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Checkout</Typography>
+          <Typography variant="h3">Order Details</Typography>
         </Grid>
       </Grid>
+      <br />
       <Grid
         container
         spacing={1}
       >
         <Grid item xs={4}>
-          <Grid
-            container
-            spacing={1}
-          >
-            <Grid item xs={12}>
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="First Name"
-                inputRef={refs.firstNameRef}
-              />
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="Last Name"
-                inputRef={refs.lastNameRef}
-              />
-              <br />
-              <br />
-              <TextField
-                style={{ width: '100%', fontSize: '20px' }}
-                label="Address Line 1"
-                inputRef={refs.addressLineOneRef}
-              />
-              <br />
-              <br />
-              <TextField
-                style={{ width: '100%', fontSize: '20px' }}
-                label="Address Line 2"
-                inputRef={refs.addressLineTwoRef}
-              />
-              <br />
-              <br />
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="City"
-                inputRef={refs.cityRef}
-              />
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="State"
-                inputRef={refs.stateRef}
-              />
-              <br />
-              <br />
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="Country"
-                inputRef={refs.countryRef}
-              />
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="Postcode"
-                inputRef={refs.postcodeRef}
-              />
-              <br />
-              <br />
-              <TextField
-                style={{ width: '50%', fontSize: '20px' }}
-                label="Phone Number"
-                inputRef={refs.phoneNumberRef}
-              />
-            </Grid>
-          </Grid>
+          <Typography variant="p">
+            <strong>Order Number:</strong>
+            {' '}
+            {`${location.state.orderid}`}
+          </Typography>
           <br />
-          <Grid
-            container
-            spacing={1}
-          >
-            <Grid item xs={12}>
-              <TextField
-                style={{ width: '100%', fontSize: '20px' }}
-                label="Delivery Instructions"
-                multiline
-                minRows={5}
-                maxRows={20}
-                inputRef={refs.deliveryInstructionsRef}
-              />
-            </Grid>
-          </Grid>
           <br />
-          <Grid
-            container
-            spacing={1}
-          >
-            <Grid item xs={12}>
-              <TextField
-                style={{ width: '100%', fontSize: '20px' }}
-                label="Special Requests"
-                multiline
-                minRows={5}
-                maxRows={20}
-                inputRef={refs.specialRequestsRef}
-              />
-            </Grid>
-          </Grid>
+          <Typography variant="p">
+            <strong>Name:</strong>
+            {' '}
+            {`${location.state.firstName} ${location.state.lastName}`}
+          </Typography>
+          <br />
+          <Typography variant="p">
+            <strong>Address:</strong>
+            {' '}
+            {`${location.state.addressLineOne}, ${location.state.city} ${location.state.state} ${location.state.postcode} ${location.state.country}`}
+          </Typography>
+          <br />
+          <Typography variant="p">
+            <strong>Phone Number:</strong>
+            {' '}
+            {`${location.state.phoneNumber}`}
+          </Typography>
+          <br />
+          <br />
+          <Typography variant="p">
+            <strong>Delivery Instructions:</strong>
+            {' '}
+            {`${location.state.deliveryInstructions}`}
+          </Typography>
+          <br />
+          <Typography variant="p">
+            <strong>Special Requests:</strong>
+            {' '}
+            {`${location.state.specialRequests}`}
+          </Typography>
+          <br />
+          <br />
+          <Typography variant="p"><strong>Payment Details</strong></Typography>
+          <br />
+          <Typography variant="p">
+            <strong>Card Name:</strong>
+            {' '}
+            {`${location.state.cardName}`}
+          </Typography>
+          <br />
+          <Typography variant="p">
+            <strong>Card Number:</strong>
+            {' '}
+            {`${location.state.cardNumber}`}
+          </Typography>
+          <br />
         </Grid>
         <Grid item xs={8}>
           <Paper>
@@ -242,7 +204,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {items.sort(getComparator(order, orderBy))
+                  {viewOrderItems.sort(getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                       <TableRow key={row.id}>
                         <TableCell>
@@ -271,18 +233,20 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={items.length}
+              count={viewOrderItems.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-          <Typography variant="h6">
-            <strong>Total:</strong>
-            {' '}
-            {items.map((item) => item.total).reduce((a, b) => a + b)}
-          </Typography>
+          <Grid item>
+            <Typography variant="h6">
+              <strong>Total:</strong>
+              {' '}
+              {`${location.state.total}`}
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
       <br />
@@ -293,14 +257,25 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
         spacing={1}
       >
         <Grid item>
-          <Button variant="contained" size="large" onClick={() => navigate('/cart')}>Return to Cart</Button>
+          <Button variant="contained" size="large" onClick={() => { editOrder(location.state.id); }}>Edit Order Details</Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Proceed to Payment</Button>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={() => { handleCancelOrder(location.state.id); }}
+          >
+            Cancel Order
+
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" size="large" onClick={() => navigate('/orderHistory')}>Back to Order History</Button>
         </Grid>
       </Grid>
     </div>
   );
 }
 
-export default CheckoutView;
+export default ViewOrderView;

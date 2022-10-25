@@ -1,9 +1,10 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+/* eslint-disable no-else-return */
+/* eslint-disable react/prop-types */
+import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,14 +12,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import { TablePagination } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import {
-  collection, query, where, getDocs, doc,
-} from 'firebase/firestore';
-import { db } from '../../firebase';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../../contexts/auth/AuthContext';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -45,13 +46,13 @@ const headCells = [
   },
   {
     id: 'quantity',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Quantity',
   },
   {
     id: 'total',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Total',
   },
@@ -98,72 +99,170 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function CartView() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('total');
+function CartView({
+  items, updateQuantity, deleteItem, toCheckout,
+}) {
+  const { currentUser } = useAuth();
 
-  const docRef = doc(db, 'order', 'v62TINS69hN8NdTos6g7', 'items', 'cartItems');
-  const [items, setItems] = useState([]);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('item');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  useEffect(() => {
-    const getItems = async () => {
-      const data = await getDocs(reviewCollectionRef);
-      setItems(data.docs.map((_doc) => ({ ..._doc.data(), id: _doc.id })));
-    };
-  }, []);
+  const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  return (
-    <div>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-      >
-        <Grid item>
-          <Typography variant="h3">Cart</Typography>
-        </Grid>
 
-        <Grid item>
-          <Paper>
-            <TableContainer>
-              <Table>
-                <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
+
+  if (currentUser != null) {
+    if (items.length > 0) {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Cart</Typography>
+            </Grid>
+
+            <Grid item>
+              <Paper>
+                <TableContainer>
+                  <Table>
+                    <EnhancedTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                      {items.sort(getComparator(order, orderBy))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                          <TableRow key={row.id}>
+                            <TableCell>
+                              {row.item}
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                type="number"
+                                defaultValue={row.quantity}
+                                onChange={(event) => {
+                                  updateQuantity(row.id, event.target.value, row.price);
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {row.total}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                color="error"
+                                onClick={() => { deleteItem(row.id); }}
+                              >
+                                <DeleteIcon />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      {emptyRows > 0 && (
+                      <TableRow
+                        style={{
+                          height: (53) * emptyRows,
+                        }}
+                      >
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={items.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-                <TableBody>
-                  {items.slice().sort(getComparator(order, orderBy)).slice().map((row, index) => (
-                    <TableRow>
-                      <TableCell>
-                        {row.item}
-                      </TableCell>
-                      <TableCell>
-                        {row.quantity}
-                      </TableCell>
-                      <TableCell>
-                        {row.total}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
+              </Paper>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6">
+                <strong>Total:</strong>
+                {' '}
+                {items.map((item) => item.total).reduce((a, b) => a + b)}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" size="large" onClick={() => { toCheckout(); }}>Checkout</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h3">Cart</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="p">Your cart is empty. Please go to menu to add items.</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => navigate('/restaurantMenu')}>Menu</Button>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    }
+  } else {
+    return (
+      <div>
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <Grid item>
+            <Typography variant="h3">Cart</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="p">You need to login to add items to the cart.</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Link to="/checkout">CHECKOUT</Link>
-        </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default CartView;

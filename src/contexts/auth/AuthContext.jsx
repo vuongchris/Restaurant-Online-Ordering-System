@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { setDoc, collection, doc } from 'firebase/firestore';
 import React, {
   createContext, useContext, useEffect, useMemo, useState,
 } from 'react';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 
 const AuthContext = createContext();
 
@@ -25,13 +27,22 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
+  const userCollectionRef = collection(db, 'user');
+
   /**
    * Register a user with their email and password
    * @param {String} email
    * @param {String} password
    * @returns Promise
    */
-  const register = async (email, password) => createUserWithEmailAndPassword(auth, email, password);
+  const register = async (email, password) => {
+    const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+    setDoc(doc(userCollectionRef, userCredentials.user.uid), {
+      email,
+      activeOrder: 'None',
+      lastOrder: 'None',
+    });
+  };
 
   /**
    * Log in a user via their email and password

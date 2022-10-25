@@ -16,7 +16,7 @@ import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -95,13 +95,16 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function CheckoutView({ refs, items, handleOrderSubmit }) {
+function EditOrderView({
+  refs, viewOrderItems, handleEditSubmit, handleCancelOrder,
+}) {
+  const location = useLocation();
+
+  const navigate = useNavigate();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('item');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -118,7 +121,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - viewOrderItems.length) : 0;
 
   return (
     <div>
@@ -129,7 +132,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
         spacing={1}
       >
         <Grid item>
-          <Typography variant="h3">Checkout</Typography>
+          <Typography variant="h3">Edit Order Details</Typography>
         </Grid>
       </Grid>
       <Grid
@@ -146,11 +149,13 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 style={{ width: '50%', fontSize: '20px' }}
                 label="First Name"
                 inputRef={refs.firstNameRef}
+                defaultValue={location.state.firstName}
               />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Last Name"
                 inputRef={refs.lastNameRef}
+                defaultValue={location.state.lastName}
               />
               <br />
               <br />
@@ -158,6 +163,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Address Line 1"
                 inputRef={refs.addressLineOneRef}
+                defaultValue={location.state.addressLineOne}
               />
               <br />
               <br />
@@ -165,6 +171,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 style={{ width: '100%', fontSize: '20px' }}
                 label="Address Line 2"
                 inputRef={refs.addressLineTwoRef}
+                defaultValue={location.state.addressLineTwo}
               />
               <br />
               <br />
@@ -172,11 +179,13 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 style={{ width: '50%', fontSize: '20px' }}
                 label="City"
                 inputRef={refs.cityRef}
+                defaultValue={location.state.city}
               />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="State"
                 inputRef={refs.stateRef}
+                defaultValue={location.state.state}
               />
               <br />
               <br />
@@ -184,11 +193,13 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Country"
                 inputRef={refs.countryRef}
+                defaultValue={location.state.country}
               />
               <TextField
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Postcode"
                 inputRef={refs.postcodeRef}
+                defaultValue={location.state.postcode}
               />
               <br />
               <br />
@@ -196,6 +207,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 style={{ width: '50%', fontSize: '20px' }}
                 label="Phone Number"
                 inputRef={refs.phoneNumberRef}
+                defaultValue={location.state.phoneNumber}
               />
             </Grid>
           </Grid>
@@ -212,6 +224,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 minRows={5}
                 maxRows={20}
                 inputRef={refs.deliveryInstructionsRef}
+                defaultValue={location.state.deliveryInstructions}
               />
             </Grid>
           </Grid>
@@ -228,6 +241,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                 minRows={5}
                 maxRows={20}
                 inputRef={refs.specialRequestsRef}
+                defaultValue={location.state.specialRequests}
               />
             </Grid>
           </Grid>
@@ -242,7 +256,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {items.sort(getComparator(order, orderBy))
+                  {viewOrderItems.sort(getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                       <TableRow key={row.id}>
                         <TableCell>
@@ -271,7 +285,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={items.length}
+              count={viewOrderItems.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -281,7 +295,7 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
           <Typography variant="h6">
             <strong>Total:</strong>
             {' '}
-            {items.map((item) => item.total).reduce((a, b) => a + b)}
+            {viewOrderItems.map((item) => item.total).reduce((a, b) => a + b)}
           </Typography>
         </Grid>
       </Grid>
@@ -293,14 +307,32 @@ function CheckoutView({ refs, items, handleOrderSubmit }) {
         spacing={1}
       >
         <Grid item>
-          <Button variant="contained" size="large" onClick={() => navigate('/cart')}>Return to Cart</Button>
+          <Button variant="contained" size="large" onClick={() => { handleEditSubmit(location.state.id); }}>Submit</Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" size="large" onClick={handleOrderSubmit}>Proceed to Payment</Button>
+          <Button
+            variant="contained"
+            size="large"
+            color="error"
+            onClick={() => { handleCancelOrder(location.state.id); }}
+          >
+            Cancel Order
+
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => navigate('/orderHistory')}
+          >
+            Return to Order History
+
+          </Button>
         </Grid>
       </Grid>
     </div>
   );
 }
 
-export default CheckoutView;
+export default EditOrderView;
