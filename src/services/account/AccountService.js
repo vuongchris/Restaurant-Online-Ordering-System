@@ -12,7 +12,7 @@ export const getSavedPaymentDetails = async (id) => {
   const paymentsRef = collection(db, 'payment');
   const q = query(paymentsRef, where('userid', '==', id));
   const querySnapshot = await getDocs(q);
-  return Promise.all(querySnapshot.docs.map((_doc) => _doc.data()));
+  return Promise.all(querySnapshot.docs.map((_doc) => ({ id: _doc.id, ..._doc.data() })));
 };
 
 export const getOrderHistory = () => [];

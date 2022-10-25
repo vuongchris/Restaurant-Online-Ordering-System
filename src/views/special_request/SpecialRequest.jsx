@@ -8,7 +8,7 @@ function SpecialRequest({
 }) {
   return (
     <div
-      style={{ textAlign: 'center' }}
+      style={{ textAlign: 'left' }}
     >
       <h1>Please add your special request here</h1>
       <div>
