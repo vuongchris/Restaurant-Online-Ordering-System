@@ -17,7 +17,7 @@ function NotificationUpdater({
             spacing={1}
           >
             <Grid item>
-              <h1>Send Update Email to User</h1>
+              <h1>Send Account Notification Email to User</h1>
             </Grid>
             <Grid item>
               <TextField

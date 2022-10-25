@@ -23,4 +23,19 @@ describe('Update View Test Cases', () => {
     // Assert
     expect(await screen.findByText('KFC')).toBeVisible();
   });
+  it('The user should see the mcdonald', () => {
+    // Arrange
+    const infoDisplay = [{
+      restaurantBranch: 'mcdonald',
+      Location: 'paris',
+    }];
+    // jest.spyOn(InfoDisplayView, 'getInfoDisplay').mockImplementation(() => infoDisplay);
+
+    // Act
+    render(<InfoDisplayUpdate infoDisplay={infoDisplay} />);
+    const restaurantName = screen.getByText(infoDisplay[0].restaurantBranch);
+
+    // Assert
+    expect(restaurantName).toBeInTheDocument();
+  });
 });

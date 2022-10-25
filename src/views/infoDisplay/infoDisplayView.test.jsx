@@ -4,6 +4,7 @@ import InfoDisplayView from './InfoDisplayView';
 
 jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
+  useNavigate: jest.fn(),
 }));
 
 describe('Display View Test Cases', () => {

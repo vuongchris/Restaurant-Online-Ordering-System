@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import LoginView from '../../views/auth/LoginView';
 import RegisterView from '../../views/auth/RegisterView';
+import { sendFullAccountEmail } from '../notification/notificationController';
 
 function AuthController({ view }) {
   const emailRef = useRef();
@@ -26,6 +27,19 @@ function AuthController({ view }) {
     try {
       setLoading(true);
       await register(emailRef.current.value, passwordRef.current.value);
+
+      // Load the information to an constant
+      const eb = {
+        preventDefault: () => null,
+        target: {
+          reset: () => null,
+          email: emailRef.current.value,
+          name: passwordRef.current.value,
+        },
+      };
+        // sent the information to the Email function
+      sendFullAccountEmail(eb);
+
       navigate('/');
     } catch (ex) {
       // eslint-disable-next-line no-console

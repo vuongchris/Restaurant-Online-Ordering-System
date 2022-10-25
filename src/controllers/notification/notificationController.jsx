@@ -73,7 +73,20 @@ export default NotificationController;
 export const sendFullOrderEmail = (e) => {
   e.preventDefault();
 
-  emailjs.sendForm('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
+  emailjs.send('service_m9xlrha', 'contact_form', e.target, 'gxDx8TedOJG-NvjPo')
+    .then((result) => {
+      console.log(result.text);
+    }, (error) => {
+      console.log(error.text);
+    });
+  e.target.reset();
+};
+
+// Exported Lite version for account notification.
+export const sendFullAccountEmail = (e) => {
+  e.preventDefault();
+
+  emailjs.send('service_m9xlrha', 'account_form', e.target, 'gxDx8TedOJG-NvjPo')
     .then((result) => {
       console.log(result.text);
     }, (error) => {

@@ -4,12 +4,13 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  doc, getDoc, updateDoc, serverTimestamp, Timestamp,
+  collection, doc, getDoc, getDocs, updateDoc, serverTimestamp, Timestamp,
 } from 'firebase/firestore';
 import { useAuth } from '../../contexts/auth/AuthContext';
 import { savePaymentDetails } from '../../services/payment/PaymentService';
 import { db } from '../../firebase';
 import PaymentView from '../../views/payment/PaymentView';
+import { sendFullOrderEmail } from '../notification/notificationController';
 
 function PaymentController() {
   const { currentUser } = useAuth();
@@ -77,6 +78,30 @@ function PaymentController() {
     });
   };
 
+  // Send the email notification for orders
+  const testEmail = async () => {
+    const docRef = doc(db, 'user', currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    const orderDoc = doc(db, 'order', docSnap.data().activeOrder);
+    const orderSnap = await getDoc(orderDoc);
+    const subCollection = collection(db, 'order', orderDoc.id, 'items');
+    const subCollectSnap = await getDocs(subCollection);
+    const itemNames = subCollectSnap.docs.map((item) => item.data().name);
+
+    // Load the information to an constant
+    const e = {
+      target: {
+        email: currentUser.email,
+        name: orderSnap.data().firstName,
+        subject: (`Your order has been submitted ${orderSnap.data().orderid}`),
+        message: itemNames,
+        contact_number: orderSnap.data().orderid,
+      },
+    };
+    // sent the information to the Email function
+    sendFullOrderEmail(e);
+  };
+
   // Save and submit payment
   const submitPayment = async (e) => {
     e.preventDefault();
@@ -98,6 +123,7 @@ function PaymentController() {
       if (refs.saveDetailsRef.current.checked) {
         await savePaymentDetails(data);
       }
+      testEmail();
       goToOrderConfirmation();
     } catch (error) {
       console.log(`Failed to save payment details with error ${error}`);
