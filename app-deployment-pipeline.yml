@@ -9,7 +9,7 @@ trigger:
 variables:
 
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '67e9d884-3a1c-483a-9cf9-75810cf1b543'
+  azureSubscription: 'ab9f9f58-1690-45e5-906c-d4ddd2528628'
 
   # Web app name
   webAppName: 'asd-restaurant-online-ordering-system'
@@ -59,14 +59,12 @@ stages:
           - task: AzureRmWebAppDeployment@4
             displayName: 'Azure App Service Deploy: asd-restaurant-online-ordering-system'
             inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure Subscription(9)(2e49b830-f424-4ecf-ba3c-cb066bbc414f)'
-              appType: 'webApp'
-              WebAppName: 'windows-restaurant-online-ordering-system'
-              deployToSlotOrASE: true
-              ResourceGroupName: 'restaurant-online-ordering-system'
-              SlotName: 'production'
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              WebAppName: $(webAppName)
               packageForLinux: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              RuntimeStack: 'NODE|14-lts'
+              StartupCommand: 'npm run start'
               ScriptType: 'Inline Script'
               InlineScript: |
                 npm install
