@@ -6,7 +6,7 @@ import { db } from '../../firebase';
  * @returns Array [] of restaurant locations
  */
 export const getLocations = async () => {
-  const locationsCollection = collection(db, 'Locations');
+  const locationsCollection = collection(db, 'restaurant');
   const locationList = await getDocs(locationsCollection);
   return Promise.all(locationList.docs.map((_doc) => _doc.data()));
 };

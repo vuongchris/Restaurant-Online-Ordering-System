@@ -19,8 +19,8 @@ function LocationController() {
 
   const [activeMarker, setActiveMarker] = useState(null);
 
-  const handleActiveMarker = (marker, name) => {
-    console.log('id ', marker, name);
+  const handleActiveMarker = (marker, restaurantBranch) => {
+    console.log('id ', marker, restaurantBranch);
     if (marker === activeMarker) {
       return;
     }

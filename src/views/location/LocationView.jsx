@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable max-len */
 /* eslint-disable react/button-has-type */
@@ -6,10 +7,12 @@ import React from 'react';
 import {
   GoogleMap, LoadScript, MarkerF, InfoWindowF,
 } from '@react-google-maps/api';
+import { useNavigate } from 'react-router';
 
 function LocationView({
   locations, containerStyle, activeMarker, setActiveMarker, handleActiveMarker, center, onLoad,
 }) {
+  const navigation = useNavigate();
   return (
     <div style={{ display: 'flex', padding: '20px', textAlign: 'center' }}>
       <div style={{ flex: 1 }}>
@@ -24,19 +27,22 @@ function LocationView({
             onClick={() => setActiveMarker(null)}
           >
             {locations.map(({
-              id, Name, Address, Lat, Lng,
+              id, restaurantBranch, Location, Hours, pickUp, Lat, Lng,
             }) => (
               <MarkerF
                 onLoad={onLoad}
                 key={id}
                 position={{ lat: Lat, lng: Lng }}
-                onClick={() => handleActiveMarker(id, Name)}
+                onClick={() => handleActiveMarker(id, restaurantBranch)}
               >
                 {activeMarker === id ? (
                   <InfoWindowF onCloseClick={() => setActiveMarker(null)}>
                     <div>
-                      <h4>{Name}</h4>
-                      <h4>{Address}</h4>
+                      <h4>{restaurantBranch}</h4>
+                      {Location}<br></br>
+                      {Hours}<br></br>
+                      Pickup: {pickUp}<br></br>
+                      <button onClick={() => navigation(`/restaurantMenu/${restaurantBranch}`)}>Select</button>
                     </div>
                   </InfoWindowF>
                 ) : null}
@@ -49,12 +55,12 @@ function LocationView({
         <h1>Locations</h1>
         <br></br>
         {locations.map((location, index) => (
-          <div key={location.Name}>
-            <button onClick={() => handleActiveMarker(location.id, location.Name)} style={{ margin: '10px', padding: '20px' }}>
+          <div key={location.restaurantBranch}>
+            <button onClick={() => handleActiveMarker(location.id, location.restaurantBranch)} style={{ margin: '10px', padding: '20px' }}>
               <h2>
                 {index + 1}
                 {' '}
-                {location.Name}
+                {location.restaurantBranch}
               </h2>
             </button>
           </div>
