@@ -18,7 +18,7 @@ describe('Display View Test Cases', () => {
     // const restaurantName = screen.getByText(emailInfo[0].email);
 
     // Assert
-    expect(screen.getByRole('button', { value: 'Send Message' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'sendo' })).toBeEnabled();
   });
   it('console.log the text "OK"', () => {
     const logSpy = jest.spyOn(console, 'log');

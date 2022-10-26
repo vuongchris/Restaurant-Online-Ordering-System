@@ -70,6 +70,7 @@ function NotificationView({
 
           <Grid item>
             <Button
+              aria-label="sendo"
               type="submit"
               variant="contained"
               size="large"
