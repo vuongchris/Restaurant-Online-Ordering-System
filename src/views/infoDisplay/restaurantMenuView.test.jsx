@@ -4,6 +4,7 @@ import RestaurantMenuView from './restaurantMenuView';
 
 jest.mock('react-router-dom', () => ({
   Link: jest.fn(),
+  useNavigate: jest.fn(),
 }));
 
 describe('Menu View Test Cases', () => {

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import './table.css';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 // Similar function to infoDisplayView but with additional information from the restaurant.
 function RestaurantMenuView({
